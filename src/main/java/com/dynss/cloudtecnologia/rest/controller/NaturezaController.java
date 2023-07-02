@@ -47,7 +47,7 @@ public class NaturezaController {
             @RequestBody(description = "DTO da natureza a ser criada", required = true,
                     content = @Content(schema = @Schema(implementation = NaturezaDTO.class))) @Valid final NaturezaDTO dto)
             throws JaExisteNaturezaCadastradaParaUsername, UsuarioNaoEncontradoException {
-        //
+
         NaturezaDTO novaNatureza = naturezaService.save(dto);
         return Response
                 .status(Response.Status.CREATED.getStatusCode())

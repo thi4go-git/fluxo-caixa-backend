@@ -46,7 +46,7 @@ public class UsuarioController {
             @RequestBody(description = "DTO do Usuário a ser criado", required = true,
                     content = @Content(schema = @Schema(implementation = UsuarioDTO.class)))
             @Valid final UsuarioDTO dto) {
-        //
+
         UsuarioDTO novo = userService.save(dto);
         return Response
                 .status(Response.Status.CREATED.getStatusCode())
