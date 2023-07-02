@@ -16,7 +16,7 @@ pipeline {
       }
       stage('Testes unitarios'){
           steps {
-              bat './mvnw verify'
+              sh './mvnw verify'
           }
       }
       stage('Sonar Analise') {
@@ -25,7 +25,7 @@ pipeline {
           }
           steps {
               withSonarQubeEnv('SONAR'){
-                  bat "${scannerHome}/bin/sonar-scanner -e -Dsonar.projectKey=fluxo-caixa-backend -Dsonar.host.url=http://cloudtecnologia.dynns.com:9000 -Dsonar.login=5034b1ee53e242e70b049739c2547d0ded913b1f -Dsonar.java.binaries=target"
+                  sh "${scannerHome}/bin/sonar-scanner -e -Dsonar.projectKey=fluxo-caixa-backend -Dsonar.host.url=http://cloudtecnologia.dynns.com:9000 -Dsonar.login=5034b1ee53e242e70b049739c2547d0ded913b1f -Dsonar.java.binaries=target"
               }
           }
       }
