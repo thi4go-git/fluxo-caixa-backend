@@ -16,3 +16,4 @@ services:
             - SERVER_BANCO_SENHA=895674
             - SERVER_BANCO_IP_PORT=192.168.1.254:5432
             - SERVER_BANCO_BASE_NAME=fluxo-caixa
+        restart: always
