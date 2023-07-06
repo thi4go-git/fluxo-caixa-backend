@@ -58,10 +58,10 @@ pipeline {
              script {
                  if (currentBuild.result == 'FAILURE') {
                       echo "Build Com erro(s)!"
-                      emailext attachLog: true, body: 'LOG:', subject: "BUILD ${BUILD_NUMBER} suporte-quarkus-backend Executado com Erro(s)!", to: 'thi4go19+jenkins@gmail.com'
+                      emailext attachLog: true, body: 'LOG:', subject: "BUILD ${BUILD_NUMBER} fluxo-caixa-backend Executado com Erro(s)!", to: 'thi4go19+jenkins@gmail.com'
                  } else {
                       echo "Build bem-sucedido!"
-                      emailext attachLog: true, body: 'LOG:', subject: "BUILD ${BUILD_NUMBER} suporte-quarkus-backend Executado com Sucesso!", to: 'thi4go19+jenkins@gmail.com'
+                      emailext attachLog: true, body: 'LOG:', subject: "BUILD ${BUILD_NUMBER} fluxo-caixa-backend Executado com Sucesso!", to: 'thi4go19+jenkins@gmail.com'
                  }
              }
         }
