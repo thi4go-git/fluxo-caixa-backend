@@ -53,14 +53,17 @@ pipeline {
    }
 
    post{
-        always{
-            junit allowEmptyResults: true, testResults: 'target/surefire-reports/*.xml'
-        }
-        unsuccessful {
-             emailext attachLog: true, body: 'LOG:', subject: 'BUILD $BUILD_NUMBER fluxo-caixa-backend Executado com Erro(s)!', to: 'thi4go19+jenkins@gmail.com'
-        }
-        fixed {
-             emailext attachLog: true, body: 'LOG:', subject: 'BUILD $BUILD_NUMBER fluxo-caixa-backend Executado com Sucesso!', to: 'thi4go19+jenkins@gmail.com'
+        always {
+             junit allowEmptyResults: true, testResults: 'target/surefire-reports/*.xml'
+             script {
+                 if (currentBuild.result == 'FAILURE') {
+                      echo "Build Com erro(s)!"
+                      emailext attachLog: true, body: 'LOG:', subject: "BUILD ${BUILD_NUMBER} suporte-quarkus-backend Executado com Erro(s)!", to: 'thi4go19+jenkins@gmail.com'
+                 } else {
+                      echo "Build bem-sucedido!"
+                      emailext attachLog: true, body: 'LOG:', subject: "BUILD ${BUILD_NUMBER} suporte-quarkus-backend Executado com Sucesso!", to: 'thi4go19+jenkins@gmail.com'
+                 }
+             }
         }
    }
 
