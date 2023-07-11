@@ -42,37 +42,54 @@ public class LancamentoServiceImpl implements LancamentoService {
     @Override
     @Transactional
     public LancamentoDTO lancar(LancamentoDTO dto) {
-
         Usuario usuario = usuarioService.findByUsername(dto.getUsername());
         if (usuario != null) {
             Natureza natureza = naturezaService
                     .findById(dto.getId_natureza());
             if (natureza != null) {
-                if (dto.getTipo() == TipoLancamento.DEBITO) {
-                    dto.setValor_total(dto.getValor_total().negate());
-                }
-                BigDecimal vlrParcelas = dto.getValor_total().divide(
-                        new BigDecimal(dto.getQtde_parcelas()), MathContext.DECIMAL128).setScale(2, RoundingMode.HALF_EVEN);
-                for (int index = 1; index <= dto.getQtde_parcelas(); index++) {
-                    int parcela = index;
-                    LocalDate data_lancamento;
-                    if (parcela == 1) {
-                        data_lancamento = dto.getData_referencia();
-                        Lancamento lancamento = new Lancamento(dto, parcela, usuario, vlrParcelas, data_lancamento, natureza);
-                        lancamentoRepository.persist(lancamento);
-                    } else {
-                        data_lancamento = dto.getData_referencia().plusMonths(parcela - 1);
-                        Lancamento lancamento = new Lancamento(dto, parcela, usuario, vlrParcelas, data_lancamento, natureza);
-                        lancamentoRepository.persist(lancamento);
-                    }
-                }
-                return dto;
+                return this.processarLancamento(usuario, natureza, dto);
             }
             throw new NaturezaNaoEncontrada();
         }
         throw new UsuarioNaoEncontradoException();
     }
 
+    private LancamentoDTO processarLancamento(Usuario usuario, Natureza natureza, LancamentoDTO dto) {
+        if (dto.getTipo().equals(TipoLancamento.AMBOS)) {
+            for (int vezesLancar = 1; vezesLancar <= 2; vezesLancar++) {
+                if (vezesLancar == 1) {
+                    dto.setTipo(TipoLancamento.CREDITO);
+                } else {
+                    dto.setTipo(TipoLancamento.DEBITO);
+                }
+                efetuarLancamento(usuario, natureza, dto);
+            }
+        } else {
+            efetuarLancamento(usuario, natureza, dto);
+        }
+        return dto;
+    }
+
+    private void efetuarLancamento(Usuario usuario, Natureza natureza, LancamentoDTO dto) {
+        if (dto.getTipo() == TipoLancamento.DEBITO) {
+            dto.setValor_total(dto.getValor_total().negate());
+        }
+        BigDecimal vlrParcelas = dto.getValor_total().divide(
+                new BigDecimal(dto.getQtde_parcelas()), MathContext.DECIMAL128).setScale(2, RoundingMode.HALF_EVEN);
+        for (int parcelaIndex = 1; parcelaIndex <= dto.getQtde_parcelas(); parcelaIndex++) {
+            int parcela = parcelaIndex;
+            LocalDate data_lancamento;
+            if (parcela == 1) {
+                data_lancamento = dto.getData_referencia();
+                Lancamento lancamento = new Lancamento(dto, parcela, usuario, vlrParcelas, data_lancamento, natureza);
+                lancamentoRepository.persist(lancamento);
+            } else {
+                data_lancamento = dto.getData_referencia().plusMonths(parcela - 1);
+                Lancamento lancamento = new Lancamento(dto, parcela, usuario, vlrParcelas, data_lancamento, natureza);
+                lancamentoRepository.persist(lancamento);
+            }
+        }
+    }
 
     @Override
     public LancamentoDataDTO listarLancamentosByUsuarioDate(String username, String data_inicio, String data_fim) {
