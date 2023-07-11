@@ -35,8 +35,8 @@ public class NaturezaServiceImpl implements NaturezaService {
             if (repository.findByUsuarioAndDescricao(usuario, dto.getDescricao()).getId() == null) {
                 Natureza nova = new Natureza(dto, usuario);
                 repository.persist(nova);
-                //
-                return naturezaMapper.naturezaToDTO(nova);
+
+                return naturezaMapper.toDto(nova);
             }
             throw new JaExisteNaturezaCadastradaParaUsername();
         }
@@ -68,8 +68,7 @@ public class NaturezaServiceImpl implements NaturezaService {
         Usuario usuario = usuarioService.findByUsername(username);
         if (usuario.getId() != null) {
             List<Natureza> naturezas = repository.getNaturezasByUsuario(usuario);
-            List<NaturezaDTO> listNaturezaDTOS = naturezaMapper.listNaturezaTolistDTO(naturezas);
-            return listNaturezaDTOS;
+            return naturezaMapper.listNaturezaTolistDTO(naturezas);
         }
         throw new UsuarioNaoEncontradoException();
     }

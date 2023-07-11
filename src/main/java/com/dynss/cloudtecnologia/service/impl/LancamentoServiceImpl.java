@@ -79,7 +79,7 @@ public class LancamentoServiceImpl implements LancamentoService {
         Usuario usuario = usuarioService.findByUsernameOrThrow(username);
         List<Lancamento> lancamentosDate = lancamentoRepository
                 .listarLancamentosByUsuarioDate(usuario, data_inicio, data_fim);
-        //
+
         return lancamentoMapper.listLancamentoToLancamentoDataDTO(lancamentosDate, data_inicio, data_fim);
     }
 
@@ -88,7 +88,7 @@ public class LancamentoServiceImpl implements LancamentoService {
         Usuario usuario = usuarioService.findByUsernameOrThrow(dtoFilter.getUsername());
         List<Lancamento> lancamentosDateFilter = lancamentoRepository
                 .listarLancamentosByUsuarioDateFilter(usuario, dtoFilter);
-        //
+
         return lancamentoMapper.listLancamentoToLancamentoDataDTO(lancamentosDateFilter, dtoFilter.getData_inicio(), dtoFilter.getData_fim());
     }
 
@@ -142,7 +142,7 @@ public class LancamentoServiceImpl implements LancamentoService {
         Usuario usuario = usuarioService.findByUsernameOrThrow(dto.getUsername());
         Natureza natureza = naturezaService.getNaturezaByUsuarioAndIDOrThrow(usuario, dto.getId_natureza());
         Lancamento lancamento = lancamentoRepository.findByIdAndUsuarioOrThrow(usuario, dto.getId());
-        //
+
         if (dto.getTipo() == TipoLancamento.DEBITO) {
             dto.setValor_total(dto.getValor_total().negate());
         }
@@ -151,9 +151,9 @@ public class LancamentoServiceImpl implements LancamentoService {
         lancamento.setData_lancamento(dto.getData_referencia());
         lancamento.setValor_parcela(dto.getValor_total());
         lancamento.setNatureza(natureza);
-        //
+
         lancamentoRepository.persist(lancamento);
-        //
+
         return dto;
     }
 

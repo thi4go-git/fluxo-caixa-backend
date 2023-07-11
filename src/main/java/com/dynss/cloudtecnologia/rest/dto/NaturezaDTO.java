@@ -11,6 +11,8 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class NaturezaDTO {
 
+    private Long id;
+
     @NotBlank(message = "{campo.descricao.obrigatorio}")
     private String descricao;
 

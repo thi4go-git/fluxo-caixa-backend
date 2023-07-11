@@ -11,17 +11,18 @@ import java.util.List;
 @ApplicationScoped
 public class NaturezaMapper {
 
-    public NaturezaDTO naturezaToDTO(final Natureza natureza) {
-        NaturezaDTO naturezaDTO = new NaturezaDTO();
-        naturezaDTO.setDescricao(natureza.getDescricao());
-        naturezaDTO.setUsername(natureza.getUsuario().getUsername());
-        return naturezaDTO;
+    public NaturezaDTO toDto(final Natureza natureza) {
+        NaturezaDTO dto = new NaturezaDTO();
+        dto.setId(natureza.getId());
+        dto.setDescricao(natureza.getDescricao());
+        dto.setUsername(natureza.getUsuario().getUsername());
+        return dto;
     }
 
     public List<NaturezaDTO> listNaturezaTolistDTO(List<Natureza> naturezas) {
         List<NaturezaDTO> listNaturezaDTOS = new ArrayList<>();
         for (Natureza natureza : naturezas) {
-            listNaturezaDTOS.add(naturezaToDTO(natureza));
+            listNaturezaDTOS.add(toDto(natureza));
         }
         return listNaturezaDTOS;
     }

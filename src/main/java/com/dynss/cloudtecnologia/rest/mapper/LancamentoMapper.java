@@ -17,7 +17,7 @@ public class LancamentoMapper {
 
     public LancamentoDataDTO listLancamentoToLancamentoDataDTO(List<Lancamento> lancamentos, String data_inicio, String data_fim) {
         LancamentoDataDTO lancamentoDataDTO = new LancamentoDataDTO();
-        //
+
         List<LancamentoDTOResponse> response = new ArrayList<>();
         for (Lancamento lancamento : lancamentos) {
             response.add(new LancamentoDTOResponse(lancamento));
@@ -26,7 +26,7 @@ public class LancamentoMapper {
         lancamentoDataDTO.setData_fim(LocalDate.parse(data_fim));
         lancamentoDataDTO.setTotal_lancamentos(response.size());
         lancamentoDataDTO.setLancamentos(response);
-        //
+
         return lancamentoDataDTO;
     }
 
@@ -37,7 +37,7 @@ public class LancamentoMapper {
         dashboardDTO.setSumEntradas(sumEntradas);
         dashboardDTO.setSumSaidas(sumSaidas);
         dashboardDTO.setAno(ano);
-        //
+
         return dashboardDTO;
 
     }

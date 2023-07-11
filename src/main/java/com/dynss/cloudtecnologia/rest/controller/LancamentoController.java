@@ -44,7 +44,7 @@ public class LancamentoController {
     public Response save(
             @RequestBody(description = "DTO do Lançamento a ser criado", required = true,
                     content = @Content(schema = @Schema(implementation = LancamentoDTO.class))) @Valid final LancamentoDTO dto) {
-        //
+
         LancamentoDTO novo = service.lancar(dto);
         return Response
                 .status(Response.Status.CREATED.getStatusCode())
@@ -64,7 +64,7 @@ public class LancamentoController {
             @QueryParam("username") @Parameter(required = true, example = "123.user") @NotBlank(message = "username é obrigatório") final String username,
             @QueryParam("inicio") @Parameter(example = "dd/MM/yyyy") String inicio,
             @QueryParam("fim") @Parameter(example = "dd/MM/yyyy") String fim) {
-        //
+
         if (inicio == null || fim == null) {
             LocalDate dataAtual = LocalDate.now();
             inicio = dataAtual.withDayOfMonth(1)
@@ -91,7 +91,7 @@ public class LancamentoController {
                     content = @Content(schema = @Schema(implementation = LancamentoDTO.class))) @Valid final LancamentoFilterDTO dtoFilter,
             @QueryParam("inicio") @Parameter(example = "dd/MM/yyyy") String inicio,
             @QueryParam("fim") @Parameter(example = "dd/MM/yyyy") String fim) {
-        //
+
         if (inicio == null || fim == null) {
             LocalDate dataAtual = LocalDate.now();
             inicio = dataAtual.withDayOfMonth(1)
@@ -101,7 +101,7 @@ public class LancamentoController {
         }
         dtoFilter.setData_inicio(inicio);
         dtoFilter.setData_fim(fim);
-        //
+
         LancamentoDataDTO lancamentoFiltro = service.listarLancamentosByUsuarioDateFilter(dtoFilter);
         return Response.ok(lancamentoFiltro).build();
     }
@@ -142,7 +142,7 @@ public class LancamentoController {
     })
     public Response getLancamentosDashboard(
             @QueryParam("username") @Parameter(required = true, example = "123.user") @NotBlank(message = "username é obrigatório") final String username) {
-        //
+
         DashboardDTO response = service.getLancamentosDashboard(username);
         return Response.ok(response).build();
     }
@@ -172,7 +172,7 @@ public class LancamentoController {
     public Response update(
             @RequestBody(description = "DTO do Lançamento a ser atualizado", required = true,
                     content = @Content(schema = @Schema(implementation = LancamentoDTO.class))) @Valid final LancamentoDTO dto) {
-        //
+
         LancamentoDTO dtoUpdate = service.update(dto);
         return Response.ok(dtoUpdate).build();
     }
