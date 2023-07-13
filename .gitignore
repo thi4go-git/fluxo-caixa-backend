@@ -34,6 +34,3 @@ nb-configuration.xml
 # patch
 *.orig
 *.rej
-
-#Variáveis
-.env

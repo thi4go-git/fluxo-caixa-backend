@@ -11,9 +11,6 @@ services:
                 - CONTEXT=fluxo-caixa-backend
         ports:
             - 8085:8080
-        environment:
-            - SERVER_BANCO_USUARIO=postgres
-            - SERVER_BANCO_SENHA=895674
-            - SERVER_BANCO_IP_PORT=192.168.1.254:5432
-            - SERVER_BANCO_BASE_NAME=fluxo-caixa
+        env_file:
+            - .env
         restart: always

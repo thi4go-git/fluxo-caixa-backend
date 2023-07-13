@@ -65,14 +65,14 @@ public class LancamentoRepository implements PanacheRepository<Lancamento> {
 
     public List<Lancamento> listarLancamentosByUsuarioDateFilter
             (Usuario usuario, LancamentoFilterDTO lancamento) {
+
         lancamento.setDescricao(lancamento.getDescricao().toUpperCase());
+
         Map<String, Object> params = new HashMap<>();
         String query = " usuario =:usuario AND  data_lancamento between '" + lancamento.getData_inicio()
                 + "' AND '" + lancamento.getData_fim() + "'  ";
         params.put("usuario", usuario);
-        //
-        System.out.println("USER ---->       " + usuario.toString());
-        System.out.println("LANÇAMENTO ----> " + lancamento.toString());
+
         if (lancamento.getId() != null) {
             query += " AND id = :id ";
             params.put("id", lancamento.getId());
