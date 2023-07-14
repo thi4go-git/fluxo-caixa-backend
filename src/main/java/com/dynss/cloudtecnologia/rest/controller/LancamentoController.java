@@ -1,17 +1,17 @@
 package com.dynss.cloudtecnologia.rest.controller;
 
-
 import com.dynss.cloudtecnologia.rest.dto.*;
 import com.dynss.cloudtecnologia.service.impl.LancamentoServiceImpl;
 import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
+import org.eclipse.microprofile.openapi.annotations.security.*;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -26,7 +26,15 @@ import java.time.format.DateTimeFormatter;
 @Path("/lancamentos")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@Tag(name = "Lançamento Controller", description = "Serviços para manutenção dos lançamentos")// Swagger
+@Tag(name = "Lançamento Controller", description = "Serviços para manutenção dos lançamentos")
+@SecuritySchemes({
+        @SecurityScheme(
+                securitySchemeName = "lancamento-controller-oauth",
+                type = SecuritySchemeType.OAUTH2,
+                flows = @OAuthFlows(password = @OAuthFlow(tokenUrl = "http://cloudtecnologia.dynns.com:8180/realms/CLOUD_TECNOLOGIA/protocol/openid-connect/token"))
+        )
+})
+@SecurityRequirement(name = "lancamento-controller-oauth")
 public class LancamentoController {
 
 
