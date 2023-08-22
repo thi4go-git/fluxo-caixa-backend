@@ -12,11 +12,9 @@ public interface NaturezaService {
 
     Natureza findById(Long id);
 
-    Natureza getNaturezaByUsuario(Usuario usuario);
-
-    Natureza getNaturezaByUsuarioAndID(Usuario usuario, Long id);
-
     Natureza getNaturezaByUsuarioAndIDOrThrow(final Usuario usuario, final Long id);
 
     List<NaturezaDTO>  getNaturezasByUsername(String username);
+
+    void deletarNatureza(final String username, final String descricaoNatureza);
 }

@@ -26,7 +26,7 @@ public class LancamentoRepository implements PanacheRepository<Lancamento> {
         Map<String, Object> params = new HashMap<>();
         params.put("usuario", usuario);
         params.put("id", id);
-        //
+
         return find("usuario =:usuario AND id =: id", params)
                 .firstResultOptional()
                 .orElseThrow(
@@ -34,12 +34,7 @@ public class LancamentoRepository implements PanacheRepository<Lancamento> {
                                 HttpResponseStatus.NOT_FOUND.code()));
     }
 
-    public PanacheQuery<Lancamento> findByUsuarioList(Usuario usuario) {
-        return find("usuario =:usuario order by data_lancamento asc",
-                Parameters.with("usuario", usuario));
-    }
-
-    public List<LancamentoReflectionDTO> getLancamentosDashboard(Usuario usuario) {
+     public List<LancamentoReflectionDTO> getLancamentosDashboard(Usuario usuario) {
         Integer ano = LocalDate.now().getYear();
         String query = "SELECT " +
                 "to_char(data_lancamento,'MM/YYYY') AS mes," +
@@ -50,10 +45,10 @@ public class LancamentoRepository implements PanacheRepository<Lancamento> {
                 "WHERE to_char(data_lancamento,'YYYY') = '" + ano + "'" +
                 " AND usuario =:usuario  " +
                 "GROUP BY mes,mes_num order by mes_num";
-        //
+
         PanacheQuery<LancamentoReflectionDTO> panache = find
                 (query, Parameters.with("usuario", usuario)).project(LancamentoReflectionDTO.class);
-        //
+
         return panache.list();
     }
 
@@ -61,6 +56,12 @@ public class LancamentoRepository implements PanacheRepository<Lancamento> {
             (Usuario usuario, String data_inicio, String data_fim) {
         return find(" id_usuario = ?1 AND data_lancamento between '" + data_inicio + "' and '" + data_fim + "' " +
                 " order by data_lancamento,id asc ", usuario.getId()).list();
+    }
+
+    public List<Lancamento> listarLancamentosUsuarioByNatureza
+            (Usuario usuario, Long idNatureza) {
+        return find(" id_usuario = ?1 AND id_natureza = ?2 " +
+                " order by data_lancamento,id asc ", usuario.getId(),idNatureza).list();
     }
 
     public List<Lancamento> listarLancamentosByUsuarioDateFilter

@@ -174,5 +174,11 @@ public class LancamentoServiceImpl implements LancamentoService {
         return dto;
     }
 
+    @Override
+    public List<Lancamento> lancamentosUsuarioPorNatureza(String username, Long idNatureza) {
+        Usuario usuario = usuarioService.findByUsernameOrThrow(username);
+         return lancamentoRepository.listarLancamentosUsuarioByNatureza(usuario,idNatureza);
+    }
+
 
 }

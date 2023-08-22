@@ -32,4 +32,6 @@ public interface LancamentoService {
 
     LancamentoDTO update(LancamentoDTO dto);
 
+    List<Lancamento> lancamentosUsuarioPorNatureza(final String username, Long idNatureza);
+
 }

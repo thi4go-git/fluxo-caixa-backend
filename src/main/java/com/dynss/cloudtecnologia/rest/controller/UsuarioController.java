@@ -1,9 +1,6 @@
 package com.dynss.cloudtecnologia.rest.controller;
 
 
-import com.dynss.cloudtecnologia.model.entity.Usuario;
-import com.dynss.cloudtecnologia.rest.dto.LancamentoDTO;
-import com.dynss.cloudtecnologia.rest.dto.LancamentoDataDTO;
 import com.dynss.cloudtecnologia.rest.dto.UsuarioDTO;
 import com.dynss.cloudtecnologia.service.impl.UsuarioServiceImpl;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -16,10 +13,8 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.security.*;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-
 import javax.inject.Inject;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

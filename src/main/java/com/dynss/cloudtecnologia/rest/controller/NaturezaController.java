@@ -3,9 +3,6 @@ package com.dynss.cloudtecnologia.rest.controller;
 
 import com.dynss.cloudtecnologia.exception.JaExisteNaturezaCadastradaParaUsername;
 import com.dynss.cloudtecnologia.exception.UsuarioNaoEncontradoException;
-import com.dynss.cloudtecnologia.model.entity.Natureza;
-import com.dynss.cloudtecnologia.rest.dto.LancamentoDTO;
-import com.dynss.cloudtecnologia.rest.dto.LancamentoDataDTO;
 import com.dynss.cloudtecnologia.rest.dto.NaturezaDTO;
 import com.dynss.cloudtecnologia.service.impl.NaturezaServiceImpl;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -76,6 +73,17 @@ public class NaturezaController {
             @QueryParam("username") @Parameter(required = true, example = "123.user") @NotBlank(message = "username é obrigatório") final String username) {
         List<NaturezaDTO> response = naturezaService.getNaturezasByUsername(username);
         return Response.ok(response).build();
+    }
+
+    @DELETE
+    @Operation(summary = "Deleta Natureza Cliente pelo ID")
+    @APIResponses(value = {@APIResponse(responseCode = "204", description = "Natureza Deletada", content = @Content(mediaType = MediaType.APPLICATION_JSON)), @APIResponse(responseCode = "204", description = "Deletado", content = @Content(mediaType = MediaType.APPLICATION_JSON))})
+    public Response deletarNaturezaPorId(
+            @QueryParam("username") @Parameter(required = true, example = "123.user") @NotBlank(message = "username é obrigatório") final String username,
+            @QueryParam("descricaoNatureza") @Parameter(required = true, example = "45") @NotBlank(message = "descricaoNatureza é obrigatório") final String descricaoNatureza
+    ) {
+        naturezaService.deletarNatureza(username,descricaoNatureza);
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
 

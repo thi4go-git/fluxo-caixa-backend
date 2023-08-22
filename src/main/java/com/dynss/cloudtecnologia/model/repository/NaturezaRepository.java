@@ -19,12 +19,6 @@ import java.util.Map;
 @ApplicationScoped
 public class NaturezaRepository implements PanacheRepository<Natureza> {
 
-    public Natureza getNaturezaByUsuario(final Usuario usuario) {
-        return find("usuario =:usuario",
-                Parameters.with("usuario", usuario)).firstResultOptional()
-                .orElse(new Natureza());
-    }
-
 
     public Natureza findByUsuarioAndDescricao(final Usuario usuario, final String descricaoNatureza) {
         return find("usuario =:usuario AND descricao = '" + descricaoNatureza + "' ",
@@ -32,23 +26,25 @@ public class NaturezaRepository implements PanacheRepository<Natureza> {
                 .orElse(new Natureza());
     }
 
-    public Natureza findByUsuarioAndID(final Usuario usuario, final Long id) {
-        return find("usuario =:usuario AND id = '" + id + "' ",
+    public Natureza findByUsuarioAndDescricaoThrow(final Usuario usuario, final String descricaoNatureza) {
+        return find("usuario =:usuario AND descricao = '" + descricaoNatureza + "' ",
                 Parameters.with("usuario", usuario)).firstResultOptional()
-                .orElse(new Natureza());
-    }
-
-    public Natureza findByUsuarioAndIDOrThrow(final Usuario usuario, final Long id) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("usuario", usuario);
-        params.put("id", id);
-        return find("usuario =:usuario AND id =:id ", params)
-                .firstResultOptional()
                 .orElseThrow(
-                        () -> new EntidadeNaoEncontradaException("Entity: Natureza", "id", "" + id,
+                        () -> new EntidadeNaoEncontradaException("Entity: Natureza", "descricao", "" + descricaoNatureza,
                                 HttpResponseStatus.NOT_FOUND.code()));
     }
 
+
+    public Natureza findByUsuarioAndIDOrThrow(final Usuario usuario, final Long idNatureza) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("usuario", usuario);
+        params.put("id", idNatureza);
+        return find("usuario =:usuario AND id =:idNatureza ", params)
+                .firstResultOptional()
+                .orElseThrow(
+                        () -> new EntidadeNaoEncontradaException("Entity: Natureza", "id", "" + idNatureza,
+                                HttpResponseStatus.NOT_FOUND.code()));
+    }
 
     public List<Natureza> getNaturezasByUsuario(final Usuario usuario) {
         return find("usuario =:usuario ",

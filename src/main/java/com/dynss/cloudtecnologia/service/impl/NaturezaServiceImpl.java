@@ -1,7 +1,9 @@
 package com.dynss.cloudtecnologia.service.impl;
 
+import com.dynss.cloudtecnologia.exception.GeralException;
 import com.dynss.cloudtecnologia.exception.JaExisteNaturezaCadastradaParaUsername;
 import com.dynss.cloudtecnologia.exception.UsuarioNaoEncontradoException;
+import com.dynss.cloudtecnologia.model.entity.Lancamento;
 import com.dynss.cloudtecnologia.model.entity.Natureza;
 import com.dynss.cloudtecnologia.model.entity.Usuario;
 import com.dynss.cloudtecnologia.model.repository.NaturezaRepository;
@@ -18,10 +20,13 @@ import java.util.List;
 public class NaturezaServiceImpl implements NaturezaService {
 
     @Inject
-    private NaturezaRepository repository;
+    private NaturezaRepository naturezaRepository;
 
     @Inject
     private UsuarioServiceImpl usuarioService;
+
+    @Inject
+    private LancamentoServiceImpl lancamentoService;
 
     @Inject
     private NaturezaMapper naturezaMapper;
@@ -32,9 +37,9 @@ public class NaturezaServiceImpl implements NaturezaService {
     public NaturezaDTO save(NaturezaDTO dto) {
         Usuario usuario = usuarioService.findByUsername(dto.getUsername());
         if (usuario.getId() != null) {
-            if (repository.findByUsuarioAndDescricao(usuario, dto.getDescricao()).getId() == null) {
+            if (naturezaRepository.findByUsuarioAndDescricao(usuario, dto.getDescricao()).getId() == null) {
                 Natureza nova = new Natureza(dto, usuario);
-                repository.persist(nova);
+                naturezaRepository.persist(nova);
 
                 return naturezaMapper.toDto(nova);
             }
@@ -45,32 +50,36 @@ public class NaturezaServiceImpl implements NaturezaService {
 
     @Override
     public Natureza findById(Long id) {
-        return repository.findById(id);
-    }
-
-    @Override
-    public Natureza getNaturezaByUsuario(Usuario usuario) {
-        return repository.getNaturezaByUsuario(usuario);
-    }
-
-    @Override
-    public Natureza getNaturezaByUsuarioAndID(Usuario usuario, Long id) {
-        return repository.findByUsuarioAndID(usuario, id);
+        return naturezaRepository.findById(id);
     }
 
     @Override
     public Natureza getNaturezaByUsuarioAndIDOrThrow(Usuario usuario, Long id) {
-        return repository.findByUsuarioAndIDOrThrow(usuario, id);
+        return naturezaRepository.findByUsuarioAndIDOrThrow(usuario, id);
     }
 
     @Override
     public List<NaturezaDTO> getNaturezasByUsername(String username) {
-        Usuario usuario = usuarioService.findByUsername(username);
-        if (usuario.getId() != null) {
-            List<Natureza> naturezas = repository.getNaturezasByUsuario(usuario);
-            return naturezaMapper.listNaturezaTolistDTO(naturezas);
-        }
-        throw new UsuarioNaoEncontradoException();
+        Usuario usuario = usuarioService.findByUsernameOrThrow(username);
+        List<Natureza> naturezas = naturezaRepository.getNaturezasByUsuario(usuario);
+        return naturezaMapper.listNaturezaTolistDTO(naturezas);
     }
+
+    @Override
+    @Transactional
+    public void deletarNatureza(String username, String descricaoNatureza) {
+        System.out.println("");
+        Usuario usuario = usuarioService.findByUsernameOrThrow(username);
+        Natureza naturezaDeletar =  naturezaRepository.findByUsuarioAndDescricaoThrow(usuario,descricaoNatureza);
+
+        List<Lancamento> lancamentosPorNatureza = lancamentoService.lancamentosUsuarioPorNatureza(username,naturezaDeletar.getId());
+        if(!lancamentosPorNatureza.isEmpty()){
+            throw new GeralException("Não é possível deletar: Já existem Lançamentos efetuados para essa natureza!");
+        }
+
+        naturezaRepository.delete(naturezaDeletar);
+
+    }
+
 
 }
