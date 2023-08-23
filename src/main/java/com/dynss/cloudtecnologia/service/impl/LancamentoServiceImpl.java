@@ -145,7 +145,20 @@ public class LancamentoServiceImpl implements LancamentoService {
     @Override
     @Transactional
     public void deleteById(Long id) {
-        Lancamento lancamento = lancamentoRepository.findById(id);
+        this.deletarPeloId(id);
+    }
+
+    @Override
+    @Transactional
+    public void deleteByIdList(List<String> idsDeletar) {
+        for ( String idDeletar : idsDeletar ) {
+            Long idDeletarLong = Long.parseLong(idDeletar);
+            this.deletarPeloId(idDeletarLong);
+        }
+    }
+
+    private void deletarPeloId(Long idLancamentoDeletar){
+        Lancamento lancamento = lancamentoRepository.findById(idLancamentoDeletar);
         if (lancamento != null) {
             lancamentoRepository.deleteById(lancamento.getId());
         } else {

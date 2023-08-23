@@ -30,6 +30,8 @@ public interface LancamentoService {
 
     void deleteById(Long id);
 
+    void deleteByIdList(List<String> idsDeletar);
+
     LancamentoDTO update(LancamentoDTO dto);
 
     List<Lancamento> lancamentosUsuarioPorNatureza(final String username, Long idNatureza);

@@ -12,6 +12,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.security.*;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import org.w3c.dom.stylesheets.LinkStyle;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -21,6 +22,7 @@ import javax.ws.rs.core.Response;
 import javax.inject.Inject;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 
 @Path("/lancamentos")
@@ -51,7 +53,7 @@ public class LancamentoController {
     })
     public Response save(
             @RequestBody(description = "DTO do Lançamento a ser criado", required = true,
-                    content = @Content(schema = @Schema(implementation = LancamentoDTO.class))) @Valid final LancamentoDTO dto) {
+                    content = @Content(schema = @Schema(implementation = LancamentoDTO.class))) @Valid final LancamentoDTO dto ) {
 
         LancamentoDTO novo = service.lancar(dto);
         return Response
@@ -165,6 +167,22 @@ public class LancamentoController {
     })
     public Response deleteById(@PathParam("id") Long id) {
         service.deleteById(id);
+        return Response.noContent().build();
+    }
+
+    @POST
+    @Path("/deletar-multiplos")
+    @Operation(summary = "Deletar Múltiplos lançamentos")
+    @APIResponses(value = {
+            @APIResponse(responseCode = "204",
+                    description = "Lançamentos deletados com Sucesso",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON))
+    })
+    public Response deletarMultiplosLancamentos(
+            @QueryParam("username") @Parameter(required = true, example = "123.user") @NotBlank(message = "username é obrigatório") final String username,
+            @RequestBody(description = "Lista de Lançamentos para deletar", required = true) final List<String> lancamentosIds
+    ) {
+        service.deleteByIdList(lancamentosIds);
         return Response.noContent().build();
     }
 
