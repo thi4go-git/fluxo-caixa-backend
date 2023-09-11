@@ -1,7 +1,6 @@
 package com.dynss.cloudtecnologia.rest.dto;
 
 import com.dynss.cloudtecnologia.anottation.UsuarioNaoLocalizado;
-import com.dynss.cloudtecnologia.model.entity.Natureza;
 import com.dynss.cloudtecnologia.model.enums.TipoLancamento;
 import lombok.AllArgsConstructor;
 import lombok.Data;

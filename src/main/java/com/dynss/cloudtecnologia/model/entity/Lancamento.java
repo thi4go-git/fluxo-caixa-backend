@@ -51,6 +51,12 @@ public class Lancamento {
 
     private Situacao situacao;
 
+    @Column
+    private LocalDate data_criacao;
+
+    @Column
+    private LocalDate data_alteracao;
+
 
     public Lancamento(LancamentoDTO dto, Integer nr_parcela, Usuario user,
                       BigDecimal valor_parcela, LocalDate data_lancamento, Natureza natureza) {
@@ -63,7 +69,7 @@ public class Lancamento {
         this.natureza = natureza;
         this.usuario = user;
         this.situacao = Situacao.EM_ABERTO;
-
+        this.data_criacao = LocalDate.now();
     }
 
 }

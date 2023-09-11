@@ -12,8 +12,6 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.security.*;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-import org.w3c.dom.stylesheets.LinkStyle;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.ws.rs.*;

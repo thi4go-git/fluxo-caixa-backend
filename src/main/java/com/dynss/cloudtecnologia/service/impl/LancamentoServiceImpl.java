@@ -151,13 +151,13 @@ public class LancamentoServiceImpl implements LancamentoService {
     @Override
     @Transactional
     public void deleteByIdList(List<String> idsDeletar) {
-        for ( String idDeletar : idsDeletar ) {
+        for (String idDeletar : idsDeletar) {
             Long idDeletarLong = Long.parseLong(idDeletar);
             this.deletarPeloId(idDeletarLong);
         }
     }
 
-    private void deletarPeloId(Long idLancamentoDeletar){
+    private void deletarPeloId(Long idLancamentoDeletar) {
         Lancamento lancamento = lancamentoRepository.findById(idLancamentoDeletar);
         if (lancamento != null) {
             lancamentoRepository.deleteById(lancamento.getId());
@@ -181,6 +181,7 @@ public class LancamentoServiceImpl implements LancamentoService {
         lancamento.setData_lancamento(dto.getData_referencia());
         lancamento.setValor_parcela(dto.getValor_total());
         lancamento.setNatureza(natureza);
+        lancamento.setData_alteracao(LocalDate.now());
 
         lancamentoRepository.persist(lancamento);
 
@@ -190,7 +191,7 @@ public class LancamentoServiceImpl implements LancamentoService {
     @Override
     public List<Lancamento> lancamentosUsuarioPorNatureza(String username, Long idNatureza) {
         Usuario usuario = usuarioService.findByUsernameOrThrow(username);
-         return lancamentoRepository.listarLancamentosUsuarioByNatureza(usuario,idNatureza);
+        return lancamentoRepository.listarLancamentosUsuarioByNatureza(usuario, idNatureza);
     }
 
 
