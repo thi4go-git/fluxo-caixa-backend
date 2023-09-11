@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 
+import javax.persistence.Column;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -24,6 +25,8 @@ public class LancamentoDTOResponse {
     private Integer nr_parcela;
     private Natureza natureza;
     private Situacao situacao;
+    private LocalDate data_criacao;
+    private LocalDate data_alteracao;
 
     public LancamentoDTOResponse(Lancamento lancamento) {
         this.id = lancamento.getId();
@@ -35,6 +38,8 @@ public class LancamentoDTOResponse {
         this.nr_parcela = lancamento.getNr_parcela();
         this.natureza = lancamento.getNatureza();
         this.situacao = lancamento.getSituacao();
+        this.data_criacao = lancamento.getData_criacao();
+        this.data_alteracao = lancamento.getData_alteracao();
     }
 
 }
