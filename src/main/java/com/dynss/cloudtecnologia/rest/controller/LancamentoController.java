@@ -86,7 +86,7 @@ public class LancamentoController {
 
 
     @POST
-    @Path("/filter")
+    @Path("/filter") 
     @RequestBody(required = true)
     @Operation(summary = "Filtrar Lançamentos")
     @APIResponses(value = {
