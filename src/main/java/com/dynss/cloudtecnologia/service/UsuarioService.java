@@ -7,11 +7,11 @@ import java.util.List;
 
 
 public interface UsuarioService {
-    UsuarioDTO save(UsuarioDTO dto);
+    Usuario save(UsuarioDTO dto);
 
-    UsuarioDTO findById(Long id);
+    Usuario findById(Long id);
 
-    List<UsuarioDTO> findAll();
+    List<Usuario> findAll();
 
     Usuario findByUsername(String username);
 

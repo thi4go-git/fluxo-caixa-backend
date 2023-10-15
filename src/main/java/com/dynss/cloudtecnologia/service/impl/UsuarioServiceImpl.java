@@ -4,7 +4,6 @@ package com.dynss.cloudtecnologia.service.impl;
 import com.dynss.cloudtecnologia.model.entity.Usuario;
 import com.dynss.cloudtecnologia.model.repository.UsuarioRepository;
 import com.dynss.cloudtecnologia.rest.dto.UsuarioDTO;
-import com.dynss.cloudtecnologia.rest.mapper.UsuarioMapper;
 import com.dynss.cloudtecnologia.service.UsuarioService;
 
 
@@ -19,29 +18,25 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Inject
     private UsuarioRepository repository;
 
-    @Inject
-    private UsuarioMapper usuarioMapper;
 
     @Override
     @Transactional
-    public UsuarioDTO save(UsuarioDTO dto) {
+    public Usuario save(UsuarioDTO dto) {
         Usuario user = new Usuario();
         user.setUsername(dto.getUsername().trim());
         repository.persist(user);
-        //
-        return usuarioMapper.toDto(user);
+
+        return user;
     }
 
     @Override
-    public UsuarioDTO findById(Long id) {
-        Usuario userAchado = repository.findByIdOrThrow(id);
-        return usuarioMapper.toDto(userAchado);
+    public Usuario findById(Long id) {
+        return repository.findByIdOrThrow(id);
     }
 
     @Override
-    public List<UsuarioDTO> findAll() {
-        List<Usuario> listaUsers = repository.findAll().list();
-        return usuarioMapper.listToDTO(listaUsers);
+    public List<Usuario> findAll() {
+        return repository.findAll().list();
     }
 
 
