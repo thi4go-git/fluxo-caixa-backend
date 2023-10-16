@@ -1,20 +1,18 @@
 package com.dynss.cloudtecnologia.rest.dto;
 
 
-import com.dynss.cloudtecnologia.model.entity.Lancamento;
 import com.dynss.cloudtecnologia.model.entity.Natureza;
 import com.dynss.cloudtecnologia.model.enums.Situacao;
 import com.dynss.cloudtecnologia.model.enums.TipoLancamento;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-
-import javax.persistence.Column;
+import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class LancamentoDTOResponse {
     private Long id;
     private TipoLancamento tipo;
@@ -27,19 +25,7 @@ public class LancamentoDTOResponse {
     private Situacao situacao;
     private LocalDate data_criacao;
     private LocalDate data_alteracao;
-
-    public LancamentoDTOResponse(Lancamento lancamento) {
-        this.id = lancamento.getId();
-        this.tipo = lancamento.getTipo();
-        this.descricao = lancamento.getDescricao();
-        this.data_lancamento = lancamento.getData_lancamento();
-        this.valor_parcela = lancamento.getValor_parcela();
-        this.qtde_parcelas = lancamento.getQtde_parcelas();
-        this.nr_parcela = lancamento.getNr_parcela();
-        this.natureza = lancamento.getNatureza();
-        this.situacao = lancamento.getSituacao();
-        this.data_criacao = lancamento.getData_criacao();
-        this.data_alteracao = lancamento.getData_alteracao();
-    }
-
+    private String nome_anexo;
+    private String type_anexo;
+    private byte[] anexo;
 }

@@ -1,8 +1,5 @@
 package com.dynss.cloudtecnologia.service.impl;
 
-import com.dynss.cloudtecnologia.exception.LancamentoNaoEncontradoException;
-import com.dynss.cloudtecnologia.exception.NaturezaNaoEncontrada;
-import com.dynss.cloudtecnologia.exception.UsuarioNaoEncontradoException;
 import com.dynss.cloudtecnologia.model.entity.Lancamento;
 import com.dynss.cloudtecnologia.model.entity.Natureza;
 import com.dynss.cloudtecnologia.model.entity.Usuario;
@@ -12,8 +9,6 @@ import com.dynss.cloudtecnologia.model.repository.LancamentoRepository;
 import com.dynss.cloudtecnologia.rest.dto.*;
 import com.dynss.cloudtecnologia.rest.mapper.LancamentoMapper;
 import com.dynss.cloudtecnologia.service.LancamentoService;
-
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -22,6 +17,7 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
+
 
 
 @ApplicationScoped
@@ -147,12 +143,8 @@ public class LancamentoServiceImpl implements LancamentoService {
     }
 
     private void deletarPeloId(Long idLancamentoDeletar) {
-        Lancamento lancamento = lancamentoRepository.findById(idLancamentoDeletar);
-        if (lancamento != null) {
-            lancamentoRepository.deleteById(lancamento.getId());
-        } else {
-            throw new LancamentoNaoEncontradoException();
-        }
+        Lancamento lancamento = lancamentoRepository.findByIdOrThrow(idLancamentoDeletar);
+        lancamentoRepository.deleteById(lancamento.getId());
     }
 
     @Override
@@ -182,6 +174,4 @@ public class LancamentoServiceImpl implements LancamentoService {
         Usuario usuario = usuarioService.findByUsernameOrThrow(username);
         return lancamentoRepository.listarLancamentosUsuarioByNatureza(usuario, idNatureza);
     }
-
-
 }

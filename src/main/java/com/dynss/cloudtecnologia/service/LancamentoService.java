@@ -3,13 +3,9 @@ package com.dynss.cloudtecnologia.service;
 import com.dynss.cloudtecnologia.model.entity.Lancamento;
 import com.dynss.cloudtecnologia.model.enums.Situacao;
 import com.dynss.cloudtecnologia.model.enums.TipoLancamento;
-import com.dynss.cloudtecnologia.rest.dto.DashboardDTO;
-import com.dynss.cloudtecnologia.rest.dto.LancamentoDTO;
-import com.dynss.cloudtecnologia.rest.dto.LancamentoDataDTO;
-import com.dynss.cloudtecnologia.rest.dto.LancamentoFilterDTO;
+import com.dynss.cloudtecnologia.rest.dto.*;
 
 
-import javax.ws.rs.core.Response;
 import java.util.List;
 
 public interface LancamentoService {
@@ -35,5 +31,6 @@ public interface LancamentoService {
     LancamentoDTO update(LancamentoDTO dto);
 
     List<Lancamento> lancamentosUsuarioPorNatureza(final String username, Long idNatureza);
+
 
 }

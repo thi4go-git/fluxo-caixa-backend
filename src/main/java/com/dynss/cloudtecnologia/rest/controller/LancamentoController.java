@@ -12,7 +12,6 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.security.*;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.ws.rs.*;
@@ -42,6 +41,10 @@ public class LancamentoController {
     @Inject
     private LancamentoServiceImpl service;
 
+    private static final String SERVER_ERROR = "Erro Interno do Servidor.";
+
+    private static final String USER_NOTFOUND = "Usuário com o username informado não localizado.";
+
     @POST
     @RequestBody(required = true)
     @Operation(summary = "Cria um Lançamento")
@@ -49,6 +52,7 @@ public class LancamentoController {
             @APIResponse(responseCode = "201", description = "Lançamento criado com sucesso",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
                             schema = @Schema(implementation = LancamentoDTO.class))),
+            @APIResponse(responseCode = "500", description = SERVER_ERROR),
     })
     public Response save(
             @RequestBody(description = "DTO do Lançamento a ser criado", required = true,
@@ -67,7 +71,9 @@ public class LancamentoController {
     @APIResponses(value = {
             @APIResponse(responseCode = "200",
                     description = "Lista de Lançamentos por data",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LancamentoDataDTO.class)))
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LancamentoDataDTO.class))),
+            @APIResponse(responseCode = "500", description = SERVER_ERROR),
+            @APIResponse(responseCode = "404", description = USER_NOTFOUND),
     })
     public Response finByIdUserData(
             @QueryParam("username") @Parameter(required = true, example = "123.user") @NotBlank(message = "username é obrigatório") final String username,
@@ -94,6 +100,7 @@ public class LancamentoController {
             @APIResponse(responseCode = "200", description = "Filtro aplicado com Sucesso!",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
                             schema = @Schema(implementation = LancamentoDataDTO.class))),
+            @APIResponse(responseCode = "500", description = SERVER_ERROR),
     })
     public Response finByIdUserDataFilter(
             @RequestBody(description = "DTO do Filtro a ser aplicado", required = true,
@@ -121,7 +128,8 @@ public class LancamentoController {
     @Operation(summary = "Listar tipos de Situação")
     @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "Tipos de Situações listadas com Sucesso!",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON))
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON)),
+            @APIResponse(responseCode = "500", description = SERVER_ERROR),
     })
     public Response findAllSituacao() {
         return Response.ok(
@@ -134,7 +142,8 @@ public class LancamentoController {
     @Operation(summary = "Listar tipos de Lançamento")
     @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "Tipos de Lançamento listados com Sucesso!",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON))
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON)),
+            @APIResponse(responseCode = "500", description = SERVER_ERROR),
     })
     public Response findAllTipo() {
         return Response.ok(service.listarTipoLancamento()).build();
@@ -147,7 +156,9 @@ public class LancamentoController {
     @APIResponses(value = {
             @APIResponse(responseCode = "200",
                     description = "Lista de Lançamentos do ano corrente por username",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = DashboardDTO.class)))
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = DashboardDTO.class))),
+            @APIResponse(responseCode = "500", description = SERVER_ERROR),
+            @APIResponse(responseCode = "404", description = USER_NOTFOUND),
     })
     public Response getLancamentosDashboard(
             @QueryParam("username") @Parameter(required = true, example = "123.user") @NotBlank(message = "username é obrigatório") final String username
@@ -162,9 +173,11 @@ public class LancamentoController {
     @APIResponses(value = {
             @APIResponse(responseCode = "204",
                     description = "Lançamento deletado com Sucesso",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON))
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON)),
+            @APIResponse(responseCode = "500", description = SERVER_ERROR),
+            @APIResponse(responseCode = "404", description = "Lançamento não localizado"),
     })
-    public Response deleteById(@PathParam("id") Long id
+    public Response deleteById(@PathParam("id") @NotBlank(message = "O campo id é obrigatório!") final Long id
     ) {
         service.deleteById(id);
         return Response.noContent().build();
@@ -176,7 +189,8 @@ public class LancamentoController {
     @APIResponses(value = {
             @APIResponse(responseCode = "204",
                     description = "Lançamentos deletados com Sucesso",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON))
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON)),
+            @APIResponse(responseCode = "500", description = SERVER_ERROR),
     })
     public Response deletarMultiplosLancamentos(
             @QueryParam("username") @Parameter(required = true, example = "123.user") @NotBlank(message = "username é obrigatório") final String username,
@@ -193,7 +207,9 @@ public class LancamentoController {
     @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "Lançamento atualizado com Sucesso!",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = LancamentoDataDTO.class))),
+                            schema = @Schema(implementation = LancamentoDTO.class))),
+            @APIResponse(responseCode = "500", description = SERVER_ERROR),
+            @APIResponse(responseCode = "404", description = USER_NOTFOUND),
     })
     public Response update(
             @RequestBody(description = "DTO do Lançamento a ser atualizado", required = true,
@@ -202,6 +218,5 @@ public class LancamentoController {
         LancamentoDTO dtoUpdate = service.update(dto);
         return Response.ok(dtoUpdate).build();
     }
-
 
 }

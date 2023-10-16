@@ -1,5 +1,6 @@
 package com.dynss.cloudtecnologia.rest.mapper;
 
+import com.dynss.cloudtecnologia.config.ModelMapperConfig;
 import com.dynss.cloudtecnologia.model.entity.Lancamento;
 import com.dynss.cloudtecnologia.model.entity.Natureza;
 import com.dynss.cloudtecnologia.model.entity.Usuario;
@@ -9,8 +10,9 @@ import com.dynss.cloudtecnologia.rest.dto.*;
 import javax.enterprise.context.ApplicationScoped;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 
 @ApplicationScoped
 public class LancamentoMapper {
@@ -18,14 +20,13 @@ public class LancamentoMapper {
     public LancamentoDataDTO listLancamentoToLancamentoDataDTO(List<Lancamento> lancamentos, String data_inicio, String data_fim) {
         LancamentoDataDTO lancamentoDataDTO = new LancamentoDataDTO();
 
-        List<LancamentoDTOResponse> response = new ArrayList<>();
-        for (Lancamento lancamento : lancamentos) {
-            response.add(new LancamentoDTOResponse(lancamento));
-        }
+        List<LancamentoDTOResponse> lancamentoDTOResponses =
+                lancamentos.stream().map(this::lancamenToLancamentoDTOResponse).collect(Collectors.toList());
+
         lancamentoDataDTO.setData_inicio(LocalDate.parse(data_inicio));
         lancamentoDataDTO.setData_fim(LocalDate.parse(data_fim));
-        lancamentoDataDTO.setTotal_lancamentos(response.size());
-        lancamentoDataDTO.setLancamentos(response);
+        lancamentoDataDTO.setTotal_lancamentos(lancamentoDTOResponses.size());
+        lancamentoDataDTO.setLancamentos(lancamentoDTOResponses);
 
         return lancamentoDataDTO;
     }
@@ -58,6 +59,10 @@ public class LancamentoMapper {
         lancamento.setData_criacao(LocalDate.now());
 
         return lancamento;
+    }
+
+    public LancamentoDTOResponse lancamenToLancamentoDTOResponse(Lancamento lancamento) {
+        return ModelMapperConfig.getModelMapper().map(lancamento, LancamentoDTOResponse.class);
     }
 
 

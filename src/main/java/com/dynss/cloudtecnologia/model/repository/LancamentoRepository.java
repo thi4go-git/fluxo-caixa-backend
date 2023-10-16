@@ -10,6 +10,7 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.panache.common.Parameters;
+
 import javax.enterprise.context.ApplicationScoped;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -32,7 +33,19 @@ public class LancamentoRepository implements PanacheRepository<Lancamento> {
                                 HttpResponseStatus.NOT_FOUND.code()));
     }
 
-     public List<LancamentoReflectionDTO> getLancamentosDashboard(Usuario usuario) {
+
+    public Lancamento findByIdOrThrow(Long id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
+
+        return find("id =: id", params)
+                .firstResultOptional()
+                .orElseThrow(
+                        () -> new EntidadeNaoEncontradaException("Entity: Lancamento", "id", "" + id,
+                                HttpResponseStatus.NOT_FOUND.code()));
+    }
+
+    public List<LancamentoReflectionDTO> getLancamentosDashboard(Usuario usuario) {
         Integer ano = LocalDate.now().getYear();
         String query = "SELECT " +
                 "to_char(data_lancamento,'MM/YYYY') AS mes," +
@@ -59,7 +72,7 @@ public class LancamentoRepository implements PanacheRepository<Lancamento> {
     public List<Lancamento> listarLancamentosUsuarioByNatureza
             (Usuario usuario, Long idNatureza) {
         return find(" id_usuario = ?1 AND id_natureza = ?2 " +
-                " order by data_lancamento,id asc ", usuario.getId(),idNatureza).list();
+                " order by data_lancamento,id asc ", usuario.getId(), idNatureza).list();
     }
 
     public List<Lancamento> listarLancamentosByUsuarioDateFilter
