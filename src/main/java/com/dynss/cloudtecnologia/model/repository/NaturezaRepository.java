@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 
-
 @ApplicationScoped
 public class NaturezaRepository implements PanacheRepository<Natureza> {
 
@@ -49,6 +48,14 @@ public class NaturezaRepository implements PanacheRepository<Natureza> {
     public List<Natureza> getNaturezasByUsuario(final Usuario usuario) {
         return find("usuario =:usuario ",
                 Parameters.with("usuario", usuario)).list();
+    }
+
+    public Natureza findByIdOrThrow(Long id) {
+        return find("id =:id",
+                Parameters.with("id", id)).firstResultOptional()
+                .orElseThrow(
+                        () -> new EntidadeNaoEncontradaException("Entity: Natureza não encontrada: ", "id", "" + id,
+                                HttpResponseStatus.NOT_FOUND.code()));
     }
 
 }

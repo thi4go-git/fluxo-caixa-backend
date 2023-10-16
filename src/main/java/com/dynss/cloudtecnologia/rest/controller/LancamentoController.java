@@ -12,6 +12,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.security.*;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.ws.rs.*;
@@ -51,8 +52,8 @@ public class LancamentoController {
     })
     public Response save(
             @RequestBody(description = "DTO do Lançamento a ser criado", required = true,
-                    content = @Content(schema = @Schema(implementation = LancamentoDTO.class))) @Valid final LancamentoDTO dto ) {
-
+                    content = @Content(schema = @Schema(implementation = LancamentoDTO.class))) @Valid final LancamentoDTO dto
+    ) {
         LancamentoDTO novo = service.lancar(dto);
         return Response
                 .status(Response.Status.CREATED.getStatusCode())
@@ -71,8 +72,8 @@ public class LancamentoController {
     public Response finByIdUserData(
             @QueryParam("username") @Parameter(required = true, example = "123.user") @NotBlank(message = "username é obrigatório") final String username,
             @QueryParam("inicio") @Parameter(example = "dd/MM/yyyy") String inicio,
-            @QueryParam("fim") @Parameter(example = "dd/MM/yyyy") String fim) {
-
+            @QueryParam("fim") @Parameter(example = "dd/MM/yyyy") String fim
+    ) {
         if (inicio == null || fim == null) {
             LocalDate dataAtual = LocalDate.now();
             inicio = dataAtual.withDayOfMonth(1)
@@ -86,7 +87,7 @@ public class LancamentoController {
 
 
     @POST
-    @Path("/filter") 
+    @Path("/filter")
     @RequestBody(required = true)
     @Operation(summary = "Filtrar Lançamentos")
     @APIResponses(value = {
@@ -98,8 +99,8 @@ public class LancamentoController {
             @RequestBody(description = "DTO do Filtro a ser aplicado", required = true,
                     content = @Content(schema = @Schema(implementation = LancamentoDTO.class))) @Valid final LancamentoFilterDTO dtoFilter,
             @QueryParam("inicio") @Parameter(example = "dd/MM/yyyy") String inicio,
-            @QueryParam("fim") @Parameter(example = "dd/MM/yyyy") String fim) {
-
+            @QueryParam("fim") @Parameter(example = "dd/MM/yyyy") String fim
+    ) {
         if (inicio == null || fim == null) {
             LocalDate dataAtual = LocalDate.now();
             inicio = dataAtual.withDayOfMonth(1)
@@ -149,8 +150,8 @@ public class LancamentoController {
                     content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = DashboardDTO.class)))
     })
     public Response getLancamentosDashboard(
-            @QueryParam("username") @Parameter(required = true, example = "123.user") @NotBlank(message = "username é obrigatório") final String username) {
-
+            @QueryParam("username") @Parameter(required = true, example = "123.user") @NotBlank(message = "username é obrigatório") final String username
+    ) {
         DashboardDTO response = service.getLancamentosDashboard(username);
         return Response.ok(response).build();
     }
@@ -163,7 +164,8 @@ public class LancamentoController {
                     description = "Lançamento deletado com Sucesso",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON))
     })
-    public Response deleteById(@PathParam("id") Long id) {
+    public Response deleteById(@PathParam("id") Long id
+    ) {
         service.deleteById(id);
         return Response.noContent().build();
     }
@@ -195,8 +197,8 @@ public class LancamentoController {
     })
     public Response update(
             @RequestBody(description = "DTO do Lançamento a ser atualizado", required = true,
-                    content = @Content(schema = @Schema(implementation = LancamentoDTO.class))) @Valid final LancamentoDTO dto) {
-
+                    content = @Content(schema = @Schema(implementation = LancamentoDTO.class))) @Valid final LancamentoDTO dto
+    ) {
         LancamentoDTO dtoUpdate = service.update(dto);
         return Response.ok(dtoUpdate).build();
     }

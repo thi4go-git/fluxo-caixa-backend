@@ -66,7 +66,7 @@ public class UsuarioController {
         Usuario novo = userService.save(dto);
         return Response
                 .status(Response.Status.CREATED.getStatusCode())
-                .entity(usuarioMapper.toDto(novo))
+                .entity(usuarioMapper.usuarioToUsuarioResponseDTO(novo))
                 .build();
     }
 
@@ -84,7 +84,7 @@ public class UsuarioController {
             @PathParam("id") @Parameter(required = true, example = "1") @NotNull(message = "id é obrigatório") final Long id
     ) {
         Usuario userAchado = userService.findById(id);
-        return Response.ok(usuarioMapper.toDto(userAchado)).build();
+        return Response.ok(usuarioMapper.usuarioToUsuarioResponseDTO(userAchado)).build();
     }
 
 
@@ -98,7 +98,7 @@ public class UsuarioController {
     })
     public Response findAll() {
         List<Usuario> usuarios = userService.findAll();
-        return Response.ok(usuarioMapper.listToDTO(usuarios)).build();
+        return Response.ok(usuarioMapper.listUsuarioToListUsuarioResponseDTO(usuarios)).build();
     }
 
 

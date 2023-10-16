@@ -42,16 +42,10 @@ public class LancamentoServiceImpl implements LancamentoService {
     @Override
     @Transactional
     public LancamentoDTO lancar(LancamentoDTO dto) {
-        Usuario usuario = usuarioService.findByUsername(dto.getUsername());
-        if (usuario != null) {
-            Natureza natureza = naturezaService
-                    .findById(dto.getId_natureza());
-            if (natureza != null) {
-                return this.processarLancamento(usuario, natureza, dto);
-            }
-            throw new NaturezaNaoEncontrada();
-        }
-        throw new UsuarioNaoEncontradoException();
+        Usuario usuario = usuarioService.findByUsernameOrThrow(dto.getUsername());
+        Natureza natureza = naturezaService.findByIdOrThrow(dto.getId_natureza());
+
+        return this.processarLancamento(usuario, natureza, dto);
     }
 
     private LancamentoDTO processarLancamento(Usuario usuario, Natureza natureza, LancamentoDTO dto) {
@@ -81,11 +75,11 @@ public class LancamentoServiceImpl implements LancamentoService {
             LocalDate data_lancamento;
             if (parcela == 1) {
                 data_lancamento = dto.getData_referencia();
-                Lancamento lancamento = new Lancamento(dto, parcela, usuario, vlrParcelas, data_lancamento, natureza);
+                Lancamento lancamento = lancamentoMapper.newLancamentoCreate(dto, parcela, usuario, vlrParcelas, data_lancamento, natureza);
                 lancamentoRepository.persist(lancamento);
             } else {
                 data_lancamento = dto.getData_referencia().plusMonths(parcela - 1);
-                Lancamento lancamento = new Lancamento(dto, parcela, usuario, vlrParcelas, data_lancamento, natureza);
+                Lancamento lancamento = lancamentoMapper.newLancamentoCreate(dto, parcela, usuario, vlrParcelas, data_lancamento, natureza);
                 lancamentoRepository.persist(lancamento);
             }
         }
@@ -122,24 +116,19 @@ public class LancamentoServiceImpl implements LancamentoService {
 
     @Override
     public DashboardDTO getLancamentosDashboard(String username) {
-        if (username != null) {
-            Usuario usuario = usuarioService.findByUsername(username);
-            if (usuario != null) {
-                List<LancamentoReflectionDTO> lancamentos = lancamentoRepository
-                        .getLancamentosDashboard(usuario);
-                BigDecimal sumEntradas = new BigDecimal(0);
-                BigDecimal sumSaidas = new BigDecimal(0);
-                Integer ano = LocalDate.now().getYear();
-                for (LancamentoReflectionDTO refle : lancamentos) {
-                    sumEntradas = sumEntradas.add(refle.getSaldo_entradas());
-                    sumSaidas = sumSaidas.add(refle.getSaldo_saidas());
-                }
-                DashboardDTO dashboardDTO = lancamentoMapper
-                        .listLancamentoReflectionToDashboardDTO(lancamentos, sumEntradas, sumSaidas, ano);
-                return dashboardDTO;
-            }
+        Usuario usuario = usuarioService.findByUsernameOrThrow(username);
+        List<LancamentoReflectionDTO> lancamentos = lancamentoRepository
+                .getLancamentosDashboard(usuario);
+        BigDecimal sumEntradas = new BigDecimal(0);
+        BigDecimal sumSaidas = new BigDecimal(0);
+        Integer ano = LocalDate.now().getYear();
+        for (LancamentoReflectionDTO refle : lancamentos) {
+            sumEntradas = sumEntradas.add(refle.getSaldo_entradas());
+            sumSaidas = sumSaidas.add(refle.getSaldo_saidas());
         }
-        return null;
+        DashboardDTO dashboardDTO = lancamentoMapper
+                .listLancamentoReflectionToDashboardDTO(lancamentos, sumEntradas, sumSaidas, ano);
+        return dashboardDTO;
     }
 
     @Override

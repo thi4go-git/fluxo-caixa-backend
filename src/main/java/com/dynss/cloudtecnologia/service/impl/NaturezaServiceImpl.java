@@ -7,6 +7,7 @@ import com.dynss.cloudtecnologia.model.entity.Natureza;
 import com.dynss.cloudtecnologia.model.entity.Usuario;
 import com.dynss.cloudtecnologia.model.repository.NaturezaRepository;
 import com.dynss.cloudtecnologia.rest.dto.NaturezaDTO;
+import com.dynss.cloudtecnologia.rest.mapper.NaturezaMapper;
 import com.dynss.cloudtecnologia.service.NaturezaService;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -26,13 +27,16 @@ public class NaturezaServiceImpl implements NaturezaService {
     @Inject
     private LancamentoServiceImpl lancamentoService;
 
+    @Inject
+    private NaturezaMapper naturezaMapper;
+
 
     @Override
     @Transactional
     public Natureza save(NaturezaDTO dto) {
         Usuario usuario = usuarioService.findByUsernameOrThrow(dto.getUsername());
         if (naturezaRepository.findByUsuarioAndDescricao(usuario, dto.getDescricao()).getId() == null) {
-            Natureza nova = new Natureza(dto, usuario);
+            Natureza nova = naturezaMapper.naturezaDTOtoNaturezaNew(dto, usuario);
             naturezaRepository.persist(nova);
 
             return nova;
@@ -43,6 +47,11 @@ public class NaturezaServiceImpl implements NaturezaService {
     @Override
     public Natureza findById(Long id) {
         return naturezaRepository.findById(id);
+    }
+
+    @Override
+    public Natureza findByIdOrThrow(Long id) {
+        return naturezaRepository.findByIdOrThrow(id);
     }
 
     @Override

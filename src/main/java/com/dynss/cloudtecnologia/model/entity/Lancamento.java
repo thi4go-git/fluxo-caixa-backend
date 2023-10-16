@@ -18,7 +18,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 public class Lancamento {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -56,20 +55,4 @@ public class Lancamento {
 
     @Column
     private LocalDate data_alteracao;
-
-
-    public Lancamento(LancamentoDTO dto, Integer nr_parcela, Usuario user,
-                      BigDecimal valor_parcela, LocalDate data_lancamento, Natureza natureza) {
-        this.tipo = dto.getTipo();
-        this.descricao = dto.getDescricao();
-        this.data_lancamento = data_lancamento;
-        this.valor_parcela = valor_parcela;
-        this.qtde_parcelas = dto.getQtde_parcelas();
-        this.nr_parcela = nr_parcela;
-        this.natureza = natureza;
-        this.usuario = user;
-        this.situacao = Situacao.EM_ABERTO;
-        this.data_criacao = LocalDate.now();
-    }
-
 }

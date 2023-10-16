@@ -1,28 +1,36 @@
 package com.dynss.cloudtecnologia.rest.mapper;
 
+import com.dynss.cloudtecnologia.config.ModelMapperConfig;
 import com.dynss.cloudtecnologia.model.entity.Usuario;
 import com.dynss.cloudtecnologia.rest.dto.UsuarioDTO;
+import com.dynss.cloudtecnologia.rest.dto.UsuarioResponseDTO;
 
 import javax.enterprise.context.ApplicationScoped;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @ApplicationScoped
 public class UsuarioMapper {
 
-    public UsuarioDTO toDto(Usuario usuario) {
-        UsuarioDTO dto = new UsuarioDTO();
-        dto.setUsername(usuario.getUsername());
-        return dto;
+    public UsuarioDTO usuarioToUsuarioDTO(Usuario usuario) {
+        return ModelMapperConfig.getModelMapper().map(usuario, UsuarioDTO.class);
     }
 
-    public List<UsuarioDTO> listToDTO(List<Usuario> usuarios) {
-        List<UsuarioDTO> listaDto = new ArrayList<>();
-        for (Usuario usuario : usuarios) {
-            listaDto.add(toDto(usuario));
-        }
-        return listaDto;
+    public UsuarioResponseDTO usuarioToUsuarioResponseDTO(Usuario usuario) {
+        return ModelMapperConfig.getModelMapper().map(usuario, UsuarioResponseDTO.class);
+    }
+
+    public Usuario usuarioDTOtoUsuarioNew(UsuarioDTO usuarioDTO) {
+        return ModelMapperConfig.getModelMapper().map(usuarioDTO, Usuario.class);
+    }
+
+    public List<UsuarioDTO> listUsuarioToListUsuarioDTO(List<Usuario> usuarios) {
+        return usuarios.stream().map(this::usuarioToUsuarioDTO).collect(Collectors.toList());
+    }
+
+    public List<UsuarioResponseDTO> listUsuarioToListUsuarioResponseDTO(List<Usuario> usuarios) {
+        return usuarios.stream().map(this::usuarioToUsuarioResponseDTO).collect(Collectors.toList());
     }
 
 }

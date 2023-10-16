@@ -1,10 +1,10 @@
 package com.dynss.cloudtecnologia.rest.mapper;
 
 import com.dynss.cloudtecnologia.model.entity.Lancamento;
-import com.dynss.cloudtecnologia.rest.dto.DashboardDTO;
-import com.dynss.cloudtecnologia.rest.dto.LancamentoDTOResponse;
-import com.dynss.cloudtecnologia.rest.dto.LancamentoDataDTO;
-import com.dynss.cloudtecnologia.rest.dto.LancamentoReflectionDTO;
+import com.dynss.cloudtecnologia.model.entity.Natureza;
+import com.dynss.cloudtecnologia.model.entity.Usuario;
+import com.dynss.cloudtecnologia.model.enums.Situacao;
+import com.dynss.cloudtecnologia.rest.dto.*;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.math.BigDecimal;
@@ -40,6 +40,24 @@ public class LancamentoMapper {
 
         return dashboardDTO;
 
+    }
+
+
+    public Lancamento newLancamentoCreate(LancamentoDTO dto, Integer nr_parcela, Usuario user,
+                                          BigDecimal valor_parcela, LocalDate data_lancamento, Natureza natureza) {
+        Lancamento lancamento = new Lancamento();
+        lancamento.setTipo(dto.getTipo());
+        lancamento.setDescricao(dto.getDescricao());
+        lancamento.setData_lancamento(data_lancamento);
+        lancamento.setValor_parcela(valor_parcela);
+        lancamento.setQtde_parcelas(dto.getQtde_parcelas());
+        lancamento.setNr_parcela(nr_parcela);
+        lancamento.setNatureza(natureza);
+        lancamento.setUsuario(user);
+        lancamento.setSituacao(Situacao.EM_ABERTO);
+        lancamento.setData_criacao(LocalDate.now());
+
+        return lancamento;
     }
 
 

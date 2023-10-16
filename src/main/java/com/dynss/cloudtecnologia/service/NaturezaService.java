@@ -12,6 +12,8 @@ public interface NaturezaService {
 
     Natureza findById(Long id);
 
+    Natureza findByIdOrThrow(Long id);
+
     Natureza getNaturezaByUsuarioAndIDOrThrow(final Usuario usuario, final Long id);
 
     List<Natureza>  getNaturezasByUsername(String username);
