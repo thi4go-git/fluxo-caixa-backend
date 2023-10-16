@@ -8,13 +8,13 @@ import java.util.List;
 
 
 public interface NaturezaService {
-    NaturezaDTO save(NaturezaDTO dto);
+    Natureza save(NaturezaDTO dto);
 
     Natureza findById(Long id);
 
     Natureza getNaturezaByUsuarioAndIDOrThrow(final Usuario usuario, final Long id);
 
-    List<NaturezaDTO>  getNaturezasByUsername(String username);
+    List<Natureza>  getNaturezasByUsername(String username);
 
     void deletarNatureza(final String username, final String descricaoNatureza);
 }
