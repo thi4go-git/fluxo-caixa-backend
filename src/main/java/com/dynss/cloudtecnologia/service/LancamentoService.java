@@ -14,7 +14,7 @@ public interface LancamentoService {
 
 
     LancamentoDataDTO listarLancamentosByUsuarioDate(String username,
-                                                     String data_inicio, String data_fim);
+                                                     String dataInicio, String dataFim);
 
     LancamentoDataDTO listarLancamentosByUsuarioDateFilter(LancamentoFilterDTO dtoFilter);
 
@@ -32,5 +32,7 @@ public interface LancamentoService {
 
     List<Lancamento> lancamentosUsuarioPorNatureza(final String username, Long idNatureza);
 
+    void uploadAnexo(AnexoUploaDTO anexoUploaDTO, Long idLancamento);
 
+    Lancamento findByIdOrThrow(Long idLancamento);
 }

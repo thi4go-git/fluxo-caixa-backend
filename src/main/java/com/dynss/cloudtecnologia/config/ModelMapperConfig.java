@@ -6,7 +6,7 @@ import org.modelmapper.ModelMapper;
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class ModelMapperConfig {
+public abstract class ModelMapperConfig {
     public static ModelMapper getModelMapper() {
         return new ModelMapper();
     }

@@ -12,16 +12,18 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class UsuarioRepository implements PanacheRepository<Usuario> {
 
+    private static final String COLUMN_USER = "username";
+
     public Usuario findByUsername(String username) {
-        return find("username =:username", Parameters.with("username", username)).firstResultOptional()
+        return find("username =:username", Parameters.with(COLUMN_USER, username)).firstResultOptional()
                 .orElse(new Usuario());
     }
 
     public Usuario findByUsernameOrThrow(String username) {
         return find("username =:username",
-                Parameters.with("username", username)).firstResultOptional()
+                Parameters.with(COLUMN_USER, username)).firstResultOptional()
                 .orElseThrow(
-                        () -> new EntidadeNaoEncontradaException("Entity: Usuario", "username", username,
+                        () -> new EntidadeNaoEncontradaException("Entity: Usuario", COLUMN_USER, username,
                                 HttpResponseStatus.NOT_FOUND.code()));
     }
 

@@ -55,4 +55,8 @@ public class Lancamento {
 
     @Column
     private LocalDate data_alteracao;
+
+    @OneToOne
+    @JoinColumn(name = "id_anexo")
+    private Anexo anexo;
 }

@@ -1,6 +1,8 @@
 package com.dynss.cloudtecnologia.rest.controller;
 
+import com.dynss.cloudtecnologia.model.entity.Lancamento;
 import com.dynss.cloudtecnologia.rest.dto.*;
+import com.dynss.cloudtecnologia.rest.mapper.AnexoMapper;
 import com.dynss.cloudtecnologia.service.impl.LancamentoServiceImpl;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeType;
@@ -12,8 +14,11 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.security.*;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -39,11 +44,18 @@ public class LancamentoController {
 
 
     @Inject
-    private LancamentoServiceImpl service;
+    private LancamentoServiceImpl lancamentoService;
+
+    @Inject
+    private AnexoMapper anexoMapper;
+
 
     private static final String SERVER_ERROR = "Erro Interno do Servidor.";
 
     private static final String USER_NOTFOUND = "Usuário com o username informado não localizado.";
+
+    private static final String LANCAMENTO_NOTFOUND = "Lançamento não localizado.";
+
 
     @POST
     @RequestBody(required = true)
@@ -58,7 +70,7 @@ public class LancamentoController {
             @RequestBody(description = "DTO do Lançamento a ser criado", required = true,
                     content = @Content(schema = @Schema(implementation = LancamentoDTO.class))) @Valid final LancamentoDTO dto
     ) {
-        LancamentoDTO novo = service.lancar(dto);
+        LancamentoDTO novo = lancamentoService.lancar(dto);
         return Response
                 .status(Response.Status.CREATED.getStatusCode())
                 .entity(novo)
@@ -87,7 +99,7 @@ public class LancamentoController {
             fim = dataAtual.withDayOfMonth(dataAtual.lengthOfMonth())
                     .format(DateTimeFormatter.ISO_DATE);
         }
-        LancamentoDataDTO lancamentoFiltro = service.listarLancamentosByUsuarioDate(username, inicio, fim);
+        LancamentoDataDTO lancamentoFiltro = lancamentoService.listarLancamentosByUsuarioDate(username, inicio, fim);
         return Response.ok(lancamentoFiltro).build();
     }
 
@@ -118,7 +130,7 @@ public class LancamentoController {
         dtoFilter.setData_inicio(inicio);
         dtoFilter.setData_fim(fim);
 
-        LancamentoDataDTO lancamentoFiltro = service.listarLancamentosByUsuarioDateFilter(dtoFilter);
+        LancamentoDataDTO lancamentoFiltro = lancamentoService.listarLancamentosByUsuarioDateFilter(dtoFilter);
         return Response.ok(lancamentoFiltro).build();
     }
 
@@ -133,7 +145,7 @@ public class LancamentoController {
     })
     public Response findAllSituacao() {
         return Response.ok(
-                service.listarSituacao()).build();
+                lancamentoService.listarSituacao()).build();
     }
 
 
@@ -146,7 +158,7 @@ public class LancamentoController {
             @APIResponse(responseCode = "500", description = SERVER_ERROR),
     })
     public Response findAllTipo() {
-        return Response.ok(service.listarTipoLancamento()).build();
+        return Response.ok(lancamentoService.listarTipoLancamento()).build();
     }
 
 
@@ -163,7 +175,7 @@ public class LancamentoController {
     public Response getLancamentosDashboard(
             @QueryParam("username") @Parameter(required = true, example = "123.user") @NotBlank(message = "username é obrigatório") final String username
     ) {
-        DashboardDTO response = service.getLancamentosDashboard(username);
+        DashboardDTO response = lancamentoService.getLancamentosDashboard(username);
         return Response.ok(response).build();
     }
 
@@ -175,11 +187,12 @@ public class LancamentoController {
                     description = "Lançamento deletado com Sucesso",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON)),
             @APIResponse(responseCode = "500", description = SERVER_ERROR),
-            @APIResponse(responseCode = "404", description = "Lançamento não localizado"),
+            @APIResponse(responseCode = "404", description = LANCAMENTO_NOTFOUND),
     })
-    public Response deleteById(@PathParam("id") @NotBlank(message = "O campo id é obrigatório!") final Long id
+    public Response deleteById(
+            @PathParam("id") @NotNull(message = "O campo id é obrigatório!") final Long id
     ) {
-        service.deleteById(id);
+        lancamentoService.deleteById(id);
         return Response.noContent().build();
     }
 
@@ -196,7 +209,7 @@ public class LancamentoController {
             @QueryParam("username") @Parameter(required = true, example = "123.user") @NotBlank(message = "username é obrigatório") final String username,
             @RequestBody(description = "Lista de Lançamentos para deletar", required = true) final List<String> lancamentosIds
     ) {
-        service.deleteByIdList(lancamentosIds);
+        lancamentoService.deleteByIdList(lancamentosIds);
         return Response.noContent().build();
     }
 
@@ -215,8 +228,42 @@ public class LancamentoController {
             @RequestBody(description = "DTO do Lançamento a ser atualizado", required = true,
                     content = @Content(schema = @Schema(implementation = LancamentoDTO.class))) @Valid final LancamentoDTO dto
     ) {
-        LancamentoDTO dtoUpdate = service.update(dto);
+        LancamentoDTO dtoUpdate = lancamentoService.update(dto);
         return Response.ok(dtoUpdate).build();
+    }
+
+
+    @POST
+    @Path("/{id}/upload")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Operation(summary = "Upload de anexo")
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Arquivo anexado!"),
+            @APIResponse(responseCode = "500", description = SERVER_ERROR),
+            @APIResponse(responseCode = "404", description = LANCAMENTO_NOTFOUND),
+    })
+    public Response uploadFile(
+            @MultipartForm AnexoUploaDTO anexoUploaDTO,
+            @PathParam("id") @NotNull(message = "O campo id é obrigatório!") final Long idLancamento
+    ) {
+        lancamentoService.uploadAnexo(anexoUploaDTO, idLancamento);
+        return Response.ok().build();
+    }
+
+
+    @GET
+    @Path("/{id}/download")
+    @Operation(summary = "Download de anexo")
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Arquivo Baixado!"),
+            @APIResponse(responseCode = "500", description = SERVER_ERROR),
+            @APIResponse(responseCode = "404", description = LANCAMENTO_NOTFOUND),
+    })
+    public Response downloadFile(
+            @PathParam("id") @NotNull(message = "O campo id é obrigatório!") final Long idLancamento
+    ) {
+        Lancamento lancamento = lancamentoService.findByIdOrThrow(idLancamento);
+        return Response.ok(anexoMapper.lancamentoToAnexoDownloaDTO(lancamento)).build();
     }
 
 }

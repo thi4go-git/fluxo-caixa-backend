@@ -6,15 +6,18 @@ import com.dynss.cloudtecnologia.model.entity.Natureza;
 import com.dynss.cloudtecnologia.model.entity.Usuario;
 import com.dynss.cloudtecnologia.model.enums.Situacao;
 import com.dynss.cloudtecnologia.rest.dto.*;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
 @ApplicationScoped
+@Slf4j
 public class LancamentoMapper {
 
     public LancamentoDataDTO listLancamentoToLancamentoDataDTO(List<Lancamento> lancamentos, String data_inicio, String data_fim) {
@@ -62,7 +65,12 @@ public class LancamentoMapper {
     }
 
     public LancamentoDTOResponse lancamenToLancamentoDTOResponse(Lancamento lancamento) {
-        return ModelMapperConfig.getModelMapper().map(lancamento, LancamentoDTOResponse.class);
+        LancamentoDTOResponse dto = ModelMapperConfig.getModelMapper().map(lancamento, LancamentoDTOResponse.class);
+        if (Objects.nonNull(lancamento.getAnexo())) {
+            dto.setNomeAnexo(lancamento.getAnexo().getNome());
+        }
+
+        return dto;
     }
 
 

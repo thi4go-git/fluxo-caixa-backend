@@ -7,6 +7,7 @@ import com.dynss.cloudtecnologia.model.enums.TipoLancamento;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -25,7 +26,5 @@ public class LancamentoDTOResponse {
     private Situacao situacao;
     private LocalDate data_criacao;
     private LocalDate data_alteracao;
-    private String nome_anexo;
-    private String type_anexo;
-    private byte[] anexo;
+    private String nomeAnexo;
 }

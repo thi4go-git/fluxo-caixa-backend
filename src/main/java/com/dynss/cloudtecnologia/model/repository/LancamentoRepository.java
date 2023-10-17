@@ -21,27 +21,30 @@ import java.util.Map;
 @ApplicationScoped
 public class LancamentoRepository implements PanacheRepository<Lancamento> {
 
+    private static final String COLUMN_USUARIO = "usuario";
+    private static final String COLUMN_ID = "id";
+
     public Lancamento findByIdAndUsuarioOrThrow(Usuario usuario, Long id) {
         Map<String, Object> params = new HashMap<>();
-        params.put("usuario", usuario);
-        params.put("id", id);
+        params.put(COLUMN_USUARIO, usuario);
+        params.put(COLUMN_ID, id);
 
         return find("usuario =:usuario AND id =: id", params)
                 .firstResultOptional()
                 .orElseThrow(
-                        () -> new EntidadeNaoEncontradaException("Entity: Lancamento", "id", "" + id,
+                        () -> new EntidadeNaoEncontradaException("Entity: Lancamento", COLUMN_ID, "" + id,
                                 HttpResponseStatus.NOT_FOUND.code()));
     }
 
 
     public Lancamento findByIdOrThrow(Long id) {
         Map<String, Object> params = new HashMap<>();
-        params.put("id", id);
+        params.put(COLUMN_ID, id);
 
         return find("id =: id", params)
                 .firstResultOptional()
                 .orElseThrow(
-                        () -> new EntidadeNaoEncontradaException("Entity: Lancamento", "id", "" + id,
+                        () -> new EntidadeNaoEncontradaException("Entity não localizada: Lancamento", COLUMN_ID, "" + id,
                                 HttpResponseStatus.NOT_FOUND.code()));
     }
 
@@ -58,15 +61,15 @@ public class LancamentoRepository implements PanacheRepository<Lancamento> {
                 "GROUP BY mes,mes_num order by mes_num";
 
         PanacheQuery<LancamentoReflectionDTO> panache = find
-                (query, Parameters.with("usuario", usuario)).project(LancamentoReflectionDTO.class);
+                (query, Parameters.with(COLUMN_USUARIO, usuario)).project(LancamentoReflectionDTO.class);
 
         return panache.list();
     }
 
     public List<Lancamento> listarLancamentosByUsuarioDate
-            (Usuario usuario, String data_inicio, String data_fim) {
-        return find(" id_usuario = ?1 AND data_lancamento between '" + data_inicio + "' and '" + data_fim + "' " +
-                " order by data_lancamento,id asc ", usuario.getId()).list();
+            (Usuario usuario, LocalDate dataInicio, LocalDate dataFim) {
+        return find(" id_usuario = ?1 AND data_lancamento between ?2 and ?3 " +
+                " order by data_lancamento,id asc ", usuario.getId(), dataInicio, dataFim).list();
     }
 
     public List<Lancamento> listarLancamentosUsuarioByNatureza
@@ -83,17 +86,16 @@ public class LancamentoRepository implements PanacheRepository<Lancamento> {
         Map<String, Object> params = new HashMap<>();
         String query = " usuario =:usuario AND  data_lancamento between '" + lancamento.getData_inicio()
                 + "' AND '" + lancamento.getData_fim() + "'  ";
-        params.put("usuario", usuario);
+        params.put(COLUMN_USUARIO, usuario);
 
         if (lancamento.getId() != null) {
             query += " AND id = :id ";
-            params.put("id", lancamento.getId());
+            params.put(COLUMN_ID, lancamento.getId());
         }
-        if (lancamento.getTipo() != null) {
-            if (!lancamento.getTipo().equals("TUDO")) {
-                query += " AND tipo = :tipo ";
-                params.put("tipo", lancamento.getTipo());
-            }
+        if (lancamento.getTipo() != null &&
+                !lancamento.getTipo().equals("TUDO")) {
+            query += " AND tipo = :tipo ";
+            params.put("tipo", lancamento.getTipo());
         }
         if (lancamento.getDescricao() != null) {
             query += " AND UPPER(descricao) like UPPER(concat('%', :descricao, '%'))";

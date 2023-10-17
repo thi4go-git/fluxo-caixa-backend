@@ -10,6 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 public class DashboardDTO {
     List<LancamentoReflectionDTO> lancamentos;
-    BigDecimal sumEntradas, sumSaidas;
+    BigDecimal sumEntradas;
+    BigDecimal sumSaidas;
     Integer ano;
 }

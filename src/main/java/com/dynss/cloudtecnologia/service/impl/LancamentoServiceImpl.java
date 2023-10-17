@@ -1,5 +1,7 @@
 package com.dynss.cloudtecnologia.service.impl;
 
+import com.dynss.cloudtecnologia.exception.GeralException;
+import com.dynss.cloudtecnologia.model.entity.Anexo;
 import com.dynss.cloudtecnologia.model.entity.Lancamento;
 import com.dynss.cloudtecnologia.model.entity.Natureza;
 import com.dynss.cloudtecnologia.model.entity.Usuario;
@@ -9,15 +11,18 @@ import com.dynss.cloudtecnologia.model.repository.LancamentoRepository;
 import com.dynss.cloudtecnologia.rest.dto.*;
 import com.dynss.cloudtecnologia.rest.mapper.LancamentoMapper;
 import com.dynss.cloudtecnologia.service.LancamentoService;
+import com.dynss.cloudtecnologia.utils.FileUtil;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-
 
 
 @ApplicationScoped
@@ -34,6 +39,10 @@ public class LancamentoServiceImpl implements LancamentoService {
 
     @Inject
     private LancamentoMapper lancamentoMapper;
+
+    @Inject
+    private AnexoServiceImpl anexoService;
+
 
     @Override
     @Transactional
@@ -68,29 +77,34 @@ public class LancamentoServiceImpl implements LancamentoService {
                 new BigDecimal(dto.getQtde_parcelas()), MathContext.DECIMAL128).setScale(2, RoundingMode.HALF_EVEN);
         for (int parcelaIndex = 1; parcelaIndex <= dto.getQtde_parcelas(); parcelaIndex++) {
             int parcela = parcelaIndex;
-            LocalDate data_lancamento;
+            LocalDate dataLancamento;
             if (parcela == 1) {
-                data_lancamento = dto.getData_referencia();
-                Lancamento lancamento = lancamentoMapper.newLancamentoCreate(dto, parcela, usuario, vlrParcelas, data_lancamento, natureza);
+                dataLancamento = dto.getData_referencia();
+                Lancamento lancamento = lancamentoMapper.newLancamentoCreate(dto, parcela, usuario, vlrParcelas, dataLancamento, natureza);
                 lancamentoRepository.persist(lancamento);
             } else {
-                data_lancamento = dto.getData_referencia().plusMonths(parcela - 1);
-                Lancamento lancamento = lancamentoMapper.newLancamentoCreate(dto, parcela, usuario, vlrParcelas, data_lancamento, natureza);
+                dataLancamento = dto.getData_referencia().plusMonths(parcela - 1);
+                Lancamento lancamento = lancamentoMapper.newLancamentoCreate(dto, parcela, usuario, vlrParcelas, dataLancamento, natureza);
                 lancamentoRepository.persist(lancamento);
             }
         }
     }
 
     @Override
-    public LancamentoDataDTO listarLancamentosByUsuarioDate(String username, String data_inicio, String data_fim) {
+    @Transactional
+    public LancamentoDataDTO listarLancamentosByUsuarioDate(String username, String dataInicioStr, String dataFimStr) {
         Usuario usuario = usuarioService.findByUsernameOrThrow(username);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate dataInicio = LocalDate.parse(dataInicioStr, formatter);
+        LocalDate dataFim = LocalDate.parse(dataFimStr, formatter);
         List<Lancamento> lancamentosDate = lancamentoRepository
-                .listarLancamentosByUsuarioDate(usuario, data_inicio, data_fim);
+                .listarLancamentosByUsuarioDate(usuario, dataInicio, dataFim);
 
-        return lancamentoMapper.listLancamentoToLancamentoDataDTO(lancamentosDate, data_inicio, data_fim);
+        return lancamentoMapper.listLancamentoToLancamentoDataDTO(lancamentosDate, dataInicioStr, dataFimStr);
     }
 
     @Override
+    @Transactional
     public LancamentoDataDTO listarLancamentosByUsuarioDateFilter(LancamentoFilterDTO dtoFilter) {
         Usuario usuario = usuarioService.findByUsernameOrThrow(dtoFilter.getUsername());
         List<Lancamento> lancamentosDateFilter = lancamentoRepository
@@ -111,6 +125,7 @@ public class LancamentoServiceImpl implements LancamentoService {
     }
 
     @Override
+    @Transactional
     public DashboardDTO getLancamentosDashboard(String username) {
         Usuario usuario = usuarioService.findByUsernameOrThrow(username);
         List<LancamentoReflectionDTO> lancamentos = lancamentoRepository
@@ -122,9 +137,8 @@ public class LancamentoServiceImpl implements LancamentoService {
             sumEntradas = sumEntradas.add(refle.getSaldo_entradas());
             sumSaidas = sumSaidas.add(refle.getSaldo_saidas());
         }
-        DashboardDTO dashboardDTO = lancamentoMapper
+        return lancamentoMapper
                 .listLancamentoReflectionToDashboardDTO(lancamentos, sumEntradas, sumSaidas, ano);
-        return dashboardDTO;
     }
 
     @Override
@@ -170,8 +184,32 @@ public class LancamentoServiceImpl implements LancamentoService {
     }
 
     @Override
+    @Transactional
     public List<Lancamento> lancamentosUsuarioPorNatureza(String username, Long idNatureza) {
         Usuario usuario = usuarioService.findByUsernameOrThrow(username);
         return lancamentoRepository.listarLancamentosUsuarioByNatureza(usuario, idNatureza);
+    }
+
+    @Override
+    @Transactional
+    public void uploadAnexo(AnexoUploaDTO anexoUploaDTO, Long idLancamento) {
+        Anexo anexo = new Anexo();
+        anexo.setNome(anexoUploaDTO.getNome());
+        anexo.setType(anexoUploaDTO.getType());
+        try {
+            anexo.setAnexo(FileUtil.inputStreamToByteArray(anexoUploaDTO.getInputStream()));
+        } catch (IOException e) {
+            throw new GeralException("Erro ao converter Stream para ByteArray");
+        }
+        anexoService.save(anexo);
+
+        Lancamento lancamento = lancamentoRepository.findByIdOrThrow(idLancamento);
+        lancamento.setAnexo(anexo);
+    }
+
+    @Override
+    @Transactional
+    public Lancamento findByIdOrThrow(Long idLancamento) {
+        return lancamentoRepository.findByIdOrThrow(idLancamento);
     }
 }
