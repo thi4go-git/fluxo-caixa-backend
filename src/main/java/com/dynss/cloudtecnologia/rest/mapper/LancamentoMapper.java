@@ -20,22 +20,22 @@ import java.util.stream.Collectors;
 @Slf4j
 public class LancamentoMapper {
 
-    public LancamentoDataDTO listLancamentoToLancamentoDataDTO(List<Lancamento> lancamentos, String data_inicio, String data_fim) {
+    public LancamentoDataDTO listLancamentoToLancamentoDataDTO(List<Lancamento> lancamentos, String dataInicio, String dataFim) {
         LancamentoDataDTO lancamentoDataDTO = new LancamentoDataDTO();
 
         List<LancamentoDTOResponse> lancamentoDTOResponses =
                 lancamentos.stream().map(this::lancamenToLancamentoDTOResponse).collect(Collectors.toList());
 
-        lancamentoDataDTO.setData_inicio(LocalDate.parse(data_inicio));
-        lancamentoDataDTO.setData_fim(LocalDate.parse(data_fim));
-        lancamentoDataDTO.setTotal_lancamentos(lancamentoDTOResponses.size());
+        lancamentoDataDTO.setDataInicio(LocalDate.parse(dataInicio));
+        lancamentoDataDTO.setDataFim(LocalDate.parse(dataFim));
+        lancamentoDataDTO.setTotalLancamentos(lancamentoDTOResponses.size());
         lancamentoDataDTO.setLancamentos(lancamentoDTOResponses);
 
         return lancamentoDataDTO;
     }
 
     public DashboardDTO listLancamentoReflectionToDashboardDTO(List<LancamentoReflectionDTO> lancamentos,
-                                                               BigDecimal sumEntradas, BigDecimal sumSaidas, Integer ano) {
+                                                               long sumEntradas, long sumSaidas, Integer ano) {
         DashboardDTO dashboardDTO = new DashboardDTO();
         dashboardDTO.setLancamentos(lancamentos);
         dashboardDTO.setSumEntradas(sumEntradas);
@@ -47,19 +47,19 @@ public class LancamentoMapper {
     }
 
 
-    public Lancamento newLancamentoCreate(LancamentoDTO dto, Integer nr_parcela, Usuario user,
-                                          BigDecimal valor_parcela, LocalDate data_lancamento, Natureza natureza) {
+    public Lancamento newLancamentoCreate(LancamentoNewDTO dto, Integer nrParcela, Usuario user,
+                                          BigDecimal valorParcela, LocalDate dataLancamento, Natureza natureza) {
         Lancamento lancamento = new Lancamento();
         lancamento.setTipo(dto.getTipo());
         lancamento.setDescricao(dto.getDescricao());
-        lancamento.setData_lancamento(data_lancamento);
-        lancamento.setValor_parcela(valor_parcela);
-        lancamento.setQtde_parcelas(dto.getQtde_parcelas());
-        lancamento.setNr_parcela(nr_parcela);
+        lancamento.setDataLancamento(dataLancamento);
+        lancamento.setValorParcela(valorParcela);
+        lancamento.setQtdeParcelas(dto.getQtdeParcelas());
+        lancamento.setNrParcela(nrParcela);
         lancamento.setNatureza(natureza);
         lancamento.setUsuario(user);
         lancamento.setSituacao(Situacao.EM_ABERTO);
-        lancamento.setData_criacao(LocalDate.now());
+        lancamento.setDataCriacao(LocalDate.now());
 
         return lancamento;
     }

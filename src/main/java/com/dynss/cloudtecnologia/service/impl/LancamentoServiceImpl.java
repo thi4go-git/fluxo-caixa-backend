@@ -46,14 +46,14 @@ public class LancamentoServiceImpl implements LancamentoService {
 
     @Override
     @Transactional
-    public LancamentoDTO lancar(LancamentoDTO dto) {
+    public LancamentoNewDTO lancar(LancamentoNewDTO dto) {
         Usuario usuario = usuarioService.findByUsernameOrThrow(dto.getUsername());
-        Natureza natureza = naturezaService.findByIdOrThrow(dto.getId_natureza());
+        Natureza natureza = naturezaService.findByIdOrThrow(dto.getIdNatureza());
 
         return this.processarLancamento(usuario, natureza, dto);
     }
 
-    private LancamentoDTO processarLancamento(Usuario usuario, Natureza natureza, LancamentoDTO dto) {
+    private LancamentoNewDTO processarLancamento(Usuario usuario, Natureza natureza, LancamentoNewDTO dto) {
         if (dto.getTipo().equals(TipoLancamento.AMBOS)) {
             for (int vezesLancar = 1; vezesLancar <= 2; vezesLancar++) {
                 if (vezesLancar == 1) {
@@ -69,21 +69,21 @@ public class LancamentoServiceImpl implements LancamentoService {
         return dto;
     }
 
-    private void efetuarLancamento(Usuario usuario, Natureza natureza, LancamentoDTO dto) {
+    private void efetuarLancamento(Usuario usuario, Natureza natureza, LancamentoNewDTO dto) {
         if (dto.getTipo() == TipoLancamento.DEBITO) {
-            dto.setValor_total(dto.getValor_total().negate());
+            dto.setValorTotal(dto.getValorTotal().negate());
         }
-        BigDecimal vlrParcelas = dto.getValor_total().divide(
-                new BigDecimal(dto.getQtde_parcelas()), MathContext.DECIMAL128).setScale(2, RoundingMode.HALF_EVEN);
-        for (int parcelaIndex = 1; parcelaIndex <= dto.getQtde_parcelas(); parcelaIndex++) {
+        BigDecimal vlrParcelas = dto.getValorTotal().divide(
+                new BigDecimal(dto.getQtdeParcelas()), MathContext.DECIMAL128).setScale(2, RoundingMode.HALF_EVEN);
+        for (int parcelaIndex = 1; parcelaIndex <= dto.getQtdeParcelas(); parcelaIndex++) {
             int parcela = parcelaIndex;
             LocalDate dataLancamento;
             if (parcela == 1) {
-                dataLancamento = dto.getData_referencia();
+                dataLancamento = dto.getDataReferencia();
                 Lancamento lancamento = lancamentoMapper.newLancamentoCreate(dto, parcela, usuario, vlrParcelas, dataLancamento, natureza);
                 lancamentoRepository.persist(lancamento);
             } else {
-                dataLancamento = dto.getData_referencia().plusMonths(parcela - 1);
+                dataLancamento = dto.getDataReferencia().plusMonths(parcela - 1);
                 Lancamento lancamento = lancamentoMapper.newLancamentoCreate(dto, parcela, usuario, vlrParcelas, dataLancamento, natureza);
                 lancamentoRepository.persist(lancamento);
             }
@@ -110,7 +110,7 @@ public class LancamentoServiceImpl implements LancamentoService {
         List<Lancamento> lancamentosDateFilter = lancamentoRepository
                 .listarLancamentosByUsuarioDateFilter(usuario, dtoFilter);
 
-        return lancamentoMapper.listLancamentoToLancamentoDataDTO(lancamentosDateFilter, dtoFilter.getData_inicio(), dtoFilter.getData_fim());
+        return lancamentoMapper.listLancamentoToLancamentoDataDTO(lancamentosDateFilter, dtoFilter.getDataInicio(), dtoFilter.getDataFim());
     }
 
 
@@ -128,17 +128,20 @@ public class LancamentoServiceImpl implements LancamentoService {
     @Transactional
     public DashboardDTO getLancamentosDashboard(String username) {
         Usuario usuario = usuarioService.findByUsernameOrThrow(username);
+
         List<LancamentoReflectionDTO> lancamentos = lancamentoRepository
                 .getLancamentosDashboard(usuario);
-        BigDecimal sumEntradas = new BigDecimal(0);
-        BigDecimal sumSaidas = new BigDecimal(0);
+        long sumEntradas = 0;
+        long sumSaidas = 0;
         Integer ano = LocalDate.now().getYear();
         for (LancamentoReflectionDTO refle : lancamentos) {
-            sumEntradas = sumEntradas.add(refle.getSaldo_entradas());
-            sumSaidas = sumSaidas.add(refle.getSaldo_saidas());
+            sumEntradas = sumEntradas + refle.getEntradas();
+            sumSaidas = sumSaidas + refle.getSaidas();
         }
+
         return lancamentoMapper
                 .listLancamentoReflectionToDashboardDTO(lancamentos, sumEntradas, sumSaidas, ano);
+
     }
 
     @Override
@@ -163,20 +166,20 @@ public class LancamentoServiceImpl implements LancamentoService {
 
     @Override
     @Transactional
-    public LancamentoDTO update(LancamentoDTO dto) {
+    public LancamentoNewDTO update(LancamentoNewDTO dto) {
         Usuario usuario = usuarioService.findByUsernameOrThrow(dto.getUsername());
-        Natureza natureza = naturezaService.getNaturezaByUsuarioAndIDOrThrow(usuario, dto.getId_natureza());
+        Natureza natureza = naturezaService.getNaturezaByUsuarioAndIDOrThrow(usuario, dto.getIdNatureza());
         Lancamento lancamento = lancamentoRepository.findByIdAndUsuarioOrThrow(usuario, dto.getId());
 
         if (dto.getTipo() == TipoLancamento.DEBITO) {
-            dto.setValor_total(dto.getValor_total().negate());
+            dto.setValorTotal(dto.getValorTotal().negate());
         }
         lancamento.setTipo(dto.getTipo());
         lancamento.setDescricao(dto.getDescricao());
-        lancamento.setData_lancamento(dto.getData_referencia());
-        lancamento.setValor_parcela(dto.getValor_total());
+        lancamento.setDataLancamento(dto.getDataReferencia());
+        lancamento.setValorParcela(dto.getValorTotal());
         lancamento.setNatureza(natureza);
-        lancamento.setData_alteracao(LocalDate.now());
+        lancamento.setDataAlteracao(LocalDate.now());
 
         lancamentoRepository.persist(lancamento);
 

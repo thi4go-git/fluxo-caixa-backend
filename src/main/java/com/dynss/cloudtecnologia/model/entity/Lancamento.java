@@ -2,11 +2,9 @@ package com.dynss.cloudtecnologia.model.entity;
 
 import com.dynss.cloudtecnologia.model.enums.Situacao;
 import com.dynss.cloudtecnologia.model.enums.TipoLancamento;
-import com.dynss.cloudtecnologia.rest.dto.LancamentoDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -28,17 +26,17 @@ public class Lancamento {
     @Column
     private String descricao;
 
-    @Column
-    private LocalDate data_lancamento;
+    @Column(name = "data_lancamento")
+    private LocalDate dataLancamento;
 
-    @Column
-    private BigDecimal valor_parcela;
+    @Column(name = "valor_parcela")
+    private BigDecimal valorParcela;
 
-    @Column
-    private Integer qtde_parcelas;
+    @Column(name = "qtde_parcelas")
+    private Integer qtdeParcelas;
 
-    @Column
-    private Integer nr_parcela;
+    @Column(name = "nr_parcela")
+    private Integer nrParcela;
 
     @ManyToOne
     @JoinColumn(name = "id_natureza")
@@ -50,11 +48,11 @@ public class Lancamento {
 
     private Situacao situacao;
 
-    @Column
-    private LocalDate data_criacao;
+    @Column(name = "data_criacao")
+    private LocalDate dataCriacao;
 
-    @Column
-    private LocalDate data_alteracao;
+    @Column(name = "data_alteracao")
+    private LocalDate dataAlteracao;
 
     @OneToOne
     @JoinColumn(name = "id_anexo")

@@ -1,6 +1,6 @@
 package com.dynss.cloudtecnologia.rest.controller;
 
-import com.dynss.cloudtecnologia.rest.dto.NaturezaDTO;
+import com.dynss.cloudtecnologia.rest.dto.NaturezaNewDTO;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.*;
@@ -24,7 +24,7 @@ class NaturezaControllerTest {
     @Order(1)
     void chamarSalvar() {
 
-        NaturezaDTO dto = new NaturezaDTO();
+        NaturezaNewDTO dto = new NaturezaNewDTO();
         dto.setDescricao("descrição");
         dto.setUsername("username");
 

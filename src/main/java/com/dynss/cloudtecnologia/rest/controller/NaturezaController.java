@@ -4,7 +4,7 @@ package com.dynss.cloudtecnologia.rest.controller;
 import com.dynss.cloudtecnologia.exception.JaExisteNaturezaCadastradaParaUsername;
 import com.dynss.cloudtecnologia.exception.UsuarioNaoEncontradoException;
 import com.dynss.cloudtecnologia.model.entity.Natureza;
-import com.dynss.cloudtecnologia.rest.dto.NaturezaDTO;
+import com.dynss.cloudtecnologia.rest.dto.NaturezaNewDTO;
 import com.dynss.cloudtecnologia.rest.mapper.NaturezaMapper;
 import com.dynss.cloudtecnologia.service.impl.NaturezaServiceImpl;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -57,12 +57,12 @@ public class NaturezaController {
     @APIResponses(value = {
             @APIResponse(responseCode = "201", description = "Natureza criada com sucesso",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = NaturezaDTO.class))),
+                            schema = @Schema(implementation = NaturezaNewDTO.class))),
             @APIResponse(responseCode = "500", description = SERVER_ERROR)
     })
     public Response save(
             @RequestBody(description = "DTO da natureza a ser criada", required = true,
-                    content = @Content(schema = @Schema(implementation = NaturezaDTO.class))) @Valid final NaturezaDTO dto)
+                    content = @Content(schema = @Schema(implementation = NaturezaNewDTO.class))) @Valid final NaturezaNewDTO dto)
             throws JaExisteNaturezaCadastradaParaUsername, UsuarioNaoEncontradoException {
 
         Natureza novaNatureza = naturezaService.save(dto);
@@ -77,7 +77,7 @@ public class NaturezaController {
     @APIResponses(value = {
             @APIResponse(responseCode = "200",
                     description = "Lista de Naturezas",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = NaturezaDTO.class))),
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = NaturezaNewDTO.class))),
             @APIResponse(responseCode = "500", description = SERVER_ERROR),
             @APIResponse(responseCode = "404", description = "username não localizado.")
     })

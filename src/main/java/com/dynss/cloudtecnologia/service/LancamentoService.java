@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface LancamentoService {
 
-    LancamentoDTO lancar(LancamentoDTO dto);
+    LancamentoNewDTO lancar(LancamentoNewDTO dto);
 
 
     LancamentoDataDTO listarLancamentosByUsuarioDate(String username,
@@ -28,7 +28,7 @@ public interface LancamentoService {
 
     void deleteByIdList(List<String> idsDeletar);
 
-    LancamentoDTO update(LancamentoDTO dto);
+    LancamentoNewDTO update(LancamentoNewDTO dto);
 
     List<Lancamento> lancamentosUsuarioPorNatureza(final String username, Long idNatureza);
 

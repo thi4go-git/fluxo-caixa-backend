@@ -1,6 +1,6 @@
 package com.dynss.cloudtecnologia.exception.mapper;
 
-import com.dynss.cloudtecnologia.rest.dto.ErrosConstraintViolationDTO;
+import com.dynss.cloudtecnologia.rest.dto.ErrosResponseDTO;
 import org.jboss.logging.Logger;
 
 import javax.validation.ConstraintViolation;
@@ -26,7 +26,7 @@ public class ConstraintViolationExceptionMapper implements ExceptionMapper<Const
             erros.add(excepti.getMessage());
         }
         return Response.status(STATUS_CODE)
-                .entity(new ErrosConstraintViolationDTO(erros))
+                .entity(new ErrosResponseDTO(erros))
                 .build();
     }
 }

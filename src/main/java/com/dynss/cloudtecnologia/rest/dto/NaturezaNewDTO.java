@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class NaturezaDTO {
+public class NaturezaNewDTO {
 
     private Long id;
 

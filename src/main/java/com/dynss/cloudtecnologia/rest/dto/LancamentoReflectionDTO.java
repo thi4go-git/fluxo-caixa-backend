@@ -6,17 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @RegisterForReflection
 public class LancamentoReflectionDTO {
-
     private String mes;
-    private String mes_str;
-    private BigDecimal saldo_entradas;
-    private BigDecimal saldo_saidas;
+    private String mesnumero;
+    private long entradas;
+    private long saidas;
 }

@@ -1,7 +1,7 @@
 package com.dynss.cloudtecnologia.exception.mapper;
 
 import com.dynss.cloudtecnologia.exception.JaExisteNaturezaCadastradaParaUsername;
-import com.dynss.cloudtecnologia.rest.dto.ErrosConstraintViolationDTO;
+import com.dynss.cloudtecnologia.rest.dto.ErrosResponseDTO;
 import org.jboss.logging.Logger;
 
 import javax.ws.rs.core.Response;
@@ -23,7 +23,7 @@ public class JaExisteNaturezaCadastradaParaUsernameMapper implements ExceptionMa
         erros.add(exception.getMessage());
 
         return Response.status(Response.Status.NOT_FOUND)
-                .entity(new ErrosConstraintViolationDTO(erros))
+                .entity(new ErrosResponseDTO(erros))
                 .build();
     }
 }

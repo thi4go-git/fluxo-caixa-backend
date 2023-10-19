@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LancamentoDTO {
+public class LancamentoNewDTO {
 
     private Long id;
 
@@ -30,15 +30,15 @@ public class LancamentoDTO {
     private String descricao;
 
     @NotNull(message = "{campo.data_referencia.obrigatorio}")
-    private LocalDate data_referencia;
+    private LocalDate dataReferencia;
 
     @NotNull(message = "{campo.valor_total.obrigatorio}")
-    private BigDecimal valor_total;
+    private BigDecimal valorTotal;
 
     @NotNull(message = "{campo.qtde_parcelas.obrigatorio}")
-    private Integer qtde_parcelas;
+    private Integer qtdeParcelas;
 
     @NotNull(message = "{campo.id_natureza.obrigatorio}")
-    private Long id_natureza;
+    private Long idNatureza;
 
 }

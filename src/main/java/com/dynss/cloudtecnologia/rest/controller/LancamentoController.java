@@ -63,14 +63,14 @@ public class LancamentoController {
     @APIResponses(value = {
             @APIResponse(responseCode = "201", description = "Lançamento criado com sucesso",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = LancamentoDTO.class))),
+                            schema = @Schema(implementation = LancamentoNewDTO.class))),
             @APIResponse(responseCode = "500", description = SERVER_ERROR),
     })
     public Response save(
             @RequestBody(description = "DTO do Lançamento a ser criado", required = true,
-                    content = @Content(schema = @Schema(implementation = LancamentoDTO.class))) @Valid final LancamentoDTO dto
+                    content = @Content(schema = @Schema(implementation = LancamentoNewDTO.class))) @Valid final LancamentoNewDTO dto
     ) {
-        LancamentoDTO novo = lancamentoService.lancar(dto);
+        LancamentoNewDTO novo = lancamentoService.lancar(dto);
         return Response
                 .status(Response.Status.CREATED.getStatusCode())
                 .entity(novo)
@@ -116,7 +116,7 @@ public class LancamentoController {
     })
     public Response finByIdUserDataFilter(
             @RequestBody(description = "DTO do Filtro a ser aplicado", required = true,
-                    content = @Content(schema = @Schema(implementation = LancamentoDTO.class))) @Valid final LancamentoFilterDTO dtoFilter,
+                    content = @Content(schema = @Schema(implementation = LancamentoNewDTO.class))) @Valid final LancamentoFilterDTO dtoFilter,
             @QueryParam("inicio") @Parameter(example = "dd/MM/yyyy") String inicio,
             @QueryParam("fim") @Parameter(example = "dd/MM/yyyy") String fim
     ) {
@@ -127,8 +127,8 @@ public class LancamentoController {
             fim = dataAtual.withDayOfMonth(dataAtual.lengthOfMonth())
                     .format(DateTimeFormatter.ISO_DATE);
         }
-        dtoFilter.setData_inicio(inicio);
-        dtoFilter.setData_fim(fim);
+        dtoFilter.setDataInicio(inicio);
+        dtoFilter.setDataFim(fim);
 
         LancamentoDataDTO lancamentoFiltro = lancamentoService.listarLancamentosByUsuarioDateFilter(dtoFilter);
         return Response.ok(lancamentoFiltro).build();
@@ -220,15 +220,15 @@ public class LancamentoController {
     @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "Lançamento atualizado com Sucesso!",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = LancamentoDTO.class))),
+                            schema = @Schema(implementation = LancamentoNewDTO.class))),
             @APIResponse(responseCode = "500", description = SERVER_ERROR),
             @APIResponse(responseCode = "404", description = USER_NOTFOUND),
     })
     public Response update(
             @RequestBody(description = "DTO do Lançamento a ser atualizado", required = true,
-                    content = @Content(schema = @Schema(implementation = LancamentoDTO.class))) @Valid final LancamentoDTO dto
+                    content = @Content(schema = @Schema(implementation = LancamentoNewDTO.class))) @Valid final LancamentoNewDTO dto
     ) {
-        LancamentoDTO dtoUpdate = lancamentoService.update(dto);
+        LancamentoNewDTO dtoUpdate = lancamentoService.update(dto);
         return Response.ok(dtoUpdate).build();
     }
 

@@ -31,7 +31,7 @@ public class NaturezaRepository implements PanacheRepository<Natureza> {
         return find("usuario =:usuario AND descricao = '" + descricaoNatureza + "' ",
                 Parameters.with(COLUMN_USUARIO, usuario)).firstResultOptional()
                 .orElseThrow(
-                        () -> new EntidadeNaoEncontradaException("Entity: Natureza", "descricao", "" + descricaoNatureza,
+                        () -> new EntidadeNaoEncontradaException("Entity: Natureza", "descricao", descricaoNatureza,
                                 HttpResponseStatus.NOT_FOUND.code()));
     }
 

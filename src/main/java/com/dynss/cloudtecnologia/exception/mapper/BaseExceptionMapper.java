@@ -1,7 +1,7 @@
 package com.dynss.cloudtecnologia.exception.mapper;
 
 import com.dynss.cloudtecnologia.exception.BaseException;
-import com.dynss.cloudtecnologia.rest.dto.ErrosConstraintViolationDTO;
+import com.dynss.cloudtecnologia.rest.dto.ErrosResponseDTO;
 import org.jboss.logging.Logger;
 
 import javax.ws.rs.core.Response;
@@ -20,7 +20,7 @@ public class BaseExceptionMapper implements ExceptionMapper<BaseException> {
         List<String> erros = new ArrayList<>();
         erros.add(exception.getMessage());
         return Response.status(exception.getStatusCode())
-                .entity(new ErrosConstraintViolationDTO(erros))
+                .entity(new ErrosResponseDTO(erros))
                 .build();
     }
 }

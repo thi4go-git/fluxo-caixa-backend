@@ -49,21 +49,20 @@ public class LancamentoRepository implements PanacheRepository<Lancamento> {
     }
 
     public List<LancamentoReflectionDTO> getLancamentosDashboard(Usuario usuario) {
-        Integer ano = LocalDate.now().getYear();
+        String ano = "" + LocalDate.now().getYear();
         String query = "SELECT " +
                 "to_char(data_lancamento,'MM/YYYY') AS mes," +
-                "to_char(data_lancamento,'MM') AS mes_num," +
-                "SUM(CASE WHEN tipo = 0 THEN valor_parcela ELSE 0 END) AS saldo_entradas, " +
-                "SUM(CASE WHEN tipo = 1 THEN valor_parcela ELSE 0 END) AS saldo_saidas " +
+                "to_char(data_lancamento,'MM') AS mesnumero," +
+                "SUM(CASE WHEN tipo = 0 THEN valor_parcela ELSE 0 END) AS entradas, " +
+                "SUM(CASE WHEN tipo = 1 THEN valor_parcela ELSE 0 END) AS saidas " +
                 "from Lancamento " +
                 "WHERE to_char(data_lancamento,'YYYY') = '" + ano + "'" +
                 " AND usuario =:usuario  " +
-                "GROUP BY mes,mes_num order by mes_num";
+                "GROUP BY mes,mesnumero order by mesnumero";
 
-        PanacheQuery<LancamentoReflectionDTO> panache = find
-                (query, Parameters.with(COLUMN_USUARIO, usuario)).project(LancamentoReflectionDTO.class);
-
-        return panache.list();
+        return find
+                (query, Parameters.with(COLUMN_USUARIO, usuario))
+                .project(LancamentoReflectionDTO.class).list();
     }
 
     public List<Lancamento> listarLancamentosByUsuarioDate
@@ -84,8 +83,8 @@ public class LancamentoRepository implements PanacheRepository<Lancamento> {
         lancamento.setDescricao(lancamento.getDescricao().toUpperCase());
 
         Map<String, Object> params = new HashMap<>();
-        String query = " usuario =:usuario AND  data_lancamento between '" + lancamento.getData_inicio()
-                + "' AND '" + lancamento.getData_fim() + "'  ";
+        String query = " usuario =:usuario AND  data_lancamento between '" + lancamento.getDataInicio()
+                + "' AND '" + lancamento.getDataFim() + "'  ";
         params.put(COLUMN_USUARIO, usuario);
 
         if (lancamento.getId() != null) {
@@ -101,21 +100,21 @@ public class LancamentoRepository implements PanacheRepository<Lancamento> {
             query += " AND UPPER(descricao) like UPPER(concat('%', :descricao, '%'))";
             params.put("descricao", lancamento.getDescricao());
         }
-        if (lancamento.getValor_parcela() != null) {
+        if (lancamento.getValorParcela() != null) {
             query += " AND valor_parcela = :valor_parcela ";
-            params.put("valor_parcela", lancamento.getValor_parcela());
+            params.put("valor_parcela", lancamento.getValorParcela());
         }
-        if (lancamento.getQtde_parcelas() != null) {
+        if (lancamento.getQtdeParcelas() != null) {
             query += " AND qtde_parcelas = :qtde_parcelas ";
-            params.put("qtde_parcelas", lancamento.getQtde_parcelas());
+            params.put("qtde_parcelas", lancamento.getQtdeParcelas());
         }
-        if (lancamento.getNr_parcela() != null) {
+        if (lancamento.getNrParcela() != null) {
             query += " AND nr_parcela = :nr_parcela  ";
-            params.put("nr_parcela", lancamento.getNr_parcela());
+            params.put("nr_parcela", lancamento.getNrParcela());
         }
-        if (lancamento.getId_natureza() != null) {
+        if (lancamento.getIdNatureza() != null) {
             query += " AND id_natureza = :id_natureza ";
-            params.put("id_natureza", lancamento.getId_natureza());
+            params.put("id_natureza", lancamento.getIdNatureza());
         }
         if (lancamento.getSituacao() != null) {
             query += " AND situacao = :situacao ";

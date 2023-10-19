@@ -21,13 +21,13 @@ public class LancamentoFilterDTO {
     private Long id = null;
     private TipoLancamento tipo = null;
     private String descricao = "";
-    private BigDecimal valor_parcela = null;
-    private Integer qtde_parcelas = null;
-    private Integer nr_parcela = null;
-    private Integer id_natureza = null;
+    private BigDecimal valorParcela = null;
+    private Integer qtdeParcelas = null;
+    private Integer nrParcela = null;
+    private Integer idNatureza = null;
     private Situacao situacao = null;
-    private String data_inicio;
-    private String data_fim;
+    private String dataInicio;
+    private String dataFim;
 
     @NotBlank(message = "{campo.username.obrigatorio}")
     @UsuarioNaoLocalizado

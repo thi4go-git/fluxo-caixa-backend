@@ -7,6 +7,6 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class ErrosConstraintViolationDTO {
+public class ErrosResponseDTO {
     List<String> erros;
 }

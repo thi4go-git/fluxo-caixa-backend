@@ -1,7 +1,7 @@
 package com.dynss.cloudtecnologia.exception.mapper;
 
 import com.dynss.cloudtecnologia.exception.GeralException;
-import com.dynss.cloudtecnologia.rest.dto.ErrosConstraintViolationDTO;
+import com.dynss.cloudtecnologia.rest.dto.ErrosResponseDTO;
 import org.jboss.logging.Logger;
 
 import javax.ws.rs.core.Response;
@@ -23,7 +23,7 @@ public class GeralExceptionMapper implements ExceptionMapper<GeralException> {
         erros.add(exception.getMessage());
 
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                .entity(new ErrosConstraintViolationDTO(erros))
+                .entity(new ErrosResponseDTO(erros))
                 .build();
     }
 }

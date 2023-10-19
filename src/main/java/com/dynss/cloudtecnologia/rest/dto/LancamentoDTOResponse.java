@@ -18,13 +18,13 @@ public class LancamentoDTOResponse {
     private Long id;
     private TipoLancamento tipo;
     private String descricao;
-    private LocalDate data_lancamento;
-    private BigDecimal valor_parcela;
-    private Integer qtde_parcelas;
-    private Integer nr_parcela;
+    private LocalDate dataLancamento;
+    private BigDecimal valorParcela;
+    private Integer qtdeParcelas;
+    private Integer nrParcela;
     private Natureza natureza;
     private Situacao situacao;
-    private LocalDate data_criacao;
-    private LocalDate data_alteracao;
+    private LocalDate dataCriacao;
+    private LocalDate dataAlteracao;
     private String nomeAnexo;
 }

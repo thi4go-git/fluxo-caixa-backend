@@ -6,7 +6,7 @@ import com.dynss.cloudtecnologia.model.entity.Lancamento;
 import com.dynss.cloudtecnologia.model.entity.Natureza;
 import com.dynss.cloudtecnologia.model.entity.Usuario;
 import com.dynss.cloudtecnologia.model.repository.NaturezaRepository;
-import com.dynss.cloudtecnologia.rest.dto.NaturezaDTO;
+import com.dynss.cloudtecnologia.rest.dto.NaturezaNewDTO;
 import com.dynss.cloudtecnologia.rest.mapper.NaturezaMapper;
 import com.dynss.cloudtecnologia.service.NaturezaService;
 
@@ -33,7 +33,7 @@ public class NaturezaServiceImpl implements NaturezaService {
 
     @Override
     @Transactional
-    public Natureza save(NaturezaDTO dto) {
+    public Natureza save(NaturezaNewDTO dto) {
         Usuario usuario = usuarioService.findByUsernameOrThrow(dto.getUsername());
         if (naturezaRepository.findByUsuarioAndDescricao(usuario, dto.getDescricao()).getId() == null) {
             Natureza nova = naturezaMapper.naturezaDTOtoNaturezaNew(dto, usuario);
