@@ -7,10 +7,8 @@ import com.dynss.cloudtecnologia.model.entity.Usuario;
 import com.dynss.cloudtecnologia.rest.dto.LancamentoFilterDTO;
 import com.dynss.cloudtecnologia.rest.dto.LancamentoReflectionDTO;
 import io.netty.handler.codec.http.HttpResponseStatus;
-import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.panache.common.Parameters;
-
 import javax.enterprise.context.ApplicationScoped;
 import java.time.LocalDate;
 import java.util.HashMap;
