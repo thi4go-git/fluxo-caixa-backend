@@ -10,7 +10,7 @@ services:
                 - JAR_FILE=target/fluxo-caixa-backend-1.0.0.jar
                 - CONTEXT=fluxo-caixa-backend
         ports:
-            - 8085:8080
+            - 8001:8080
         env_file:
             - .env
         restart: always
