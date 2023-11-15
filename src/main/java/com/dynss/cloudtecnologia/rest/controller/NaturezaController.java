@@ -82,7 +82,7 @@ public class NaturezaController {
             @APIResponse(responseCode = "404", description = "username não localizado.")
     })
     public Response getNaturezasByUsername(
-            @QueryParam("username") @Parameter(required = true, example = "user.saulo") @NotBlank(message = "username é obrigatório") final String username
+            @QueryParam("username") @Parameter(required = true, example = "user.saulo") @NotBlank(message = "QueryParam username é obrigatório") final String username
     ) {
         List<Natureza> naturezas = naturezaService.getNaturezasByUsername(username);
         return Response.ok(naturezaMapper.listNaturezaTolistDTO(naturezas)).build();
