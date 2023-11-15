@@ -46,7 +46,7 @@ public class Lancamento {
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
-    private Situacao situacao;
+    Situacao situacao;
 
     @Column(name = "data_criacao")
     private LocalDate dataCriacao;

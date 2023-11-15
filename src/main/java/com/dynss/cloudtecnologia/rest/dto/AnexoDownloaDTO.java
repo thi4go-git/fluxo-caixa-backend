@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AnexoDownloaDTO {
-    private String nome;
-    private String type;
-    private byte[] anexo;
+    String nome;
+    String type;
+    byte[] anexo;
 }

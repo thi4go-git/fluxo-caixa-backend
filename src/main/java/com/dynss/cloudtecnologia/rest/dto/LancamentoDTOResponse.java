@@ -15,16 +15,16 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LancamentoDTOResponse {
-    private Long id;
-    private TipoLancamento tipo;
-    private String descricao;
-    private LocalDate dataLancamento;
-    private BigDecimal valorParcela;
-    private Integer qtdeParcelas;
-    private Integer nrParcela;
-    private Natureza natureza;
-    private Situacao situacao;
-    private LocalDate dataCriacao;
-    private LocalDate dataAlteracao;
-    private String nomeAnexo;
+    Long id;
+    TipoLancamento tipo;
+    String descricao;
+    LocalDate dataLancamento;
+    BigDecimal valorParcela;
+    Integer qtdeParcelas;
+    Integer nrParcela;
+    Natureza natureza;
+    Situacao situacao;
+    LocalDate dataCriacao;
+    LocalDate dataAlteracao;
+    String nomeAnexo;
 }
