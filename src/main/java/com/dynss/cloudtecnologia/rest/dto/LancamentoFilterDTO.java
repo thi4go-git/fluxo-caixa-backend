@@ -18,16 +18,16 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class LancamentoFilterDTO {
 
-    private Long id = null;
-    private TipoLancamento tipo = null;
-    private String descricao = "";
-    private BigDecimal valorParcela = null;
-    private Integer qtdeParcelas = null;
-    private Integer nrParcela = null;
-    private Integer idNatureza = null;
-    private Situacao situacao = null;
-    private String dataInicio;
-    private String dataFim;
+    Long id = null;
+    TipoLancamento tipo = null;
+    String descricao = "";
+    BigDecimal valorParcela = null;
+    Integer qtdeParcelas = null;
+    Integer nrParcela = null;
+    Integer idNatureza = null;
+    Situacao situacao = null;
+    String dataInicio;
+    String dataFim;
 
     @NotBlank(message = "{campo.username.obrigatorio}")
     @UsuarioNaoLocalizado

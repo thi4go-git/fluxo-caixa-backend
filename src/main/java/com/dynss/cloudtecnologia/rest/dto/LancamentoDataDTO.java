@@ -10,8 +10,8 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class LancamentoDataDTO {
-    private LocalDate dataInicio;
-    private LocalDate dataFim;
-    private Integer totalLancamentos;
-    private List<LancamentoDTOResponse> lancamentos;
+    LocalDate dataInicio;
+    LocalDate dataFim;
+    Integer totalLancamentos;
+    List<LancamentoDTOResponse> lancamentos;
 }

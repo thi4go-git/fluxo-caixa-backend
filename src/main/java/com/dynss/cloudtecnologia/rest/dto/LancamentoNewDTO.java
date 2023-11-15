@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class LancamentoNewDTO {
 
-    private Long id;
+    Long id;
 
     @NotBlank(message = "{campo.username.obrigatorio}")
     @UsuarioNaoLocalizado
