@@ -12,10 +12,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.ws.rs.core.MediaType;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.stream.Stream;
+
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,8 +37,8 @@ class LancamentoControllerTest {
     private static final String END_POINT_USUARIOS = "/usuarios";
     private static final String TAG_ID = "id";
 
-    private static String usernameCriado;
-    private static String idNaturezaStr;
+    private String usernameCriado;
+    private String idNaturezaStr;
 
 
     @Test
@@ -71,7 +73,7 @@ class LancamentoControllerTest {
 
 
     // Método para fornecer os tipos de lançamento como argumentos para o teste parametrizado
-    private static Stream<TipoLancamento> tipoLancamentoProvider() {
+    static Stream<TipoLancamento> tipoLancamentoProvider() {
         return Stream.of(TipoLancamento.DEBITO, TipoLancamento.CREDITO, TipoLancamento.AMBOS);
     }
 
@@ -112,7 +114,7 @@ class LancamentoControllerTest {
 
         LOG.info("Lançamento criado ::: " + respostaLancamento.getBody().asString());
         assertEquals(HttpStatus.SC_CREATED, respostaLancamento.statusCode());
-        assertEquals(usernameCriado, respostaLancamento.jsonPath().getString("username"));
+        assertEquals(usernameCriado, respostaLancamento.jsonPath().getString(TAG_USERNAME));
         assertTrue(respostaLancamento.jsonPath().getString("idNatureza").contains(idNaturezaStr));
         assertTrue(respostaLancamento.jsonPath().getString("descricao").contains(DESCRICAO_LANCAMENTO_EXISTENTE));
         assertTrue(respostaLancamento.jsonPath().getString("qtdeParcelas").contains("5"));
