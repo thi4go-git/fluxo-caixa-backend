@@ -2,6 +2,7 @@ package com.dynss.cloudtecnologia.rest.dto;
 
 import com.dynss.cloudtecnologia.anottation.UsuarioNaoLocalizado;
 import com.dynss.cloudtecnologia.model.enums.TipoLancamento;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,7 @@ public class LancamentoNewDTO {
     @NotBlank(message = "{campo.descricao.obrigatorio}")
     private String descricao;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @NotNull(message = "{campo.data_referencia.obrigatorio}")
     private LocalDate dataReferencia;
 
