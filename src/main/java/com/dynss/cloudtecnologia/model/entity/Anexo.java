@@ -23,6 +23,6 @@ public class Anexo {
     private String type;
 
     @Lob
-    @Column
-    private byte[] anexo;
+    @Column(name = "anexo")
+    private byte[] anexoByte;
 }

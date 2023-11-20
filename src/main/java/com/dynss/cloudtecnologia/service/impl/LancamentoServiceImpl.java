@@ -200,7 +200,7 @@ public class LancamentoServiceImpl implements LancamentoService {
         anexo.setNome(anexoUploaDTO.getNome());
         anexo.setType(anexoUploaDTO.getType());
         try {
-            anexo.setAnexo(FileUtil.inputStreamToByteArray(anexoUploaDTO.getInputStream()));
+            anexo.setAnexoByte(FileUtil.inputStreamToByteArray(anexoUploaDTO.getInputStream()));
         } catch (IOException e) {
             throw new GeralException("Erro ao converter Stream para ByteArray");
         }

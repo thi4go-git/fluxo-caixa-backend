@@ -14,7 +14,7 @@ public class AnexoMapper {
         AnexoDownloaDTO anexoDownloaDTO = new AnexoDownloaDTO();
         anexoDownloaDTO.setNome(lancamento.getAnexo().getNome());
         anexoDownloaDTO.setType(lancamento.getAnexo().getType());
-        anexoDownloaDTO.setAnexo(lancamento.getAnexo().getAnexo());
+        anexoDownloaDTO.setAnexo(lancamento.getAnexo().getAnexoByte());
 
         return anexoDownloaDTO;
     }
