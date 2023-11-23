@@ -5,9 +5,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class FileUtil {
+public class FilesUtil {
 
-    private FileUtil() {
+    private FilesUtil() {
     }
 
     public static byte[] inputStreamToByteArray(InputStream inputStream) throws IOException {

@@ -3,6 +3,7 @@ package com.dynss.cloudtecnologia.rest.controller;
 import com.dynss.cloudtecnologia.model.entity.Lancamento;
 import com.dynss.cloudtecnologia.rest.dto.*;
 import com.dynss.cloudtecnologia.rest.mapper.AnexoMapper;
+import com.dynss.cloudtecnologia.rest.mapper.LancamentoMapper;
 import com.dynss.cloudtecnologia.service.impl.LancamentoServiceImpl;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeType;
@@ -48,6 +49,9 @@ public class LancamentoController {
 
     @Inject
     private AnexoMapper anexoMapper;
+
+    @Inject
+    private LancamentoMapper lancamentoMapper;
 
 
     private static final String SERVER_ERROR = "Erro Interno do Servidor.";
@@ -211,6 +215,24 @@ public class LancamentoController {
     ) {
         lancamentoService.deleteByIdList(lancamentosIds);
         return Response.noContent().build();
+    }
+
+
+    @GET
+    @Path("/{id}")
+    @Operation(summary = "Obter Lançamento por id")
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200",
+                    description = "Lançamento deletado com Sucesso",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON)),
+            @APIResponse(responseCode = "500", description = SERVER_ERROR),
+            @APIResponse(responseCode = "404", description = LANCAMENTO_NOTFOUND),
+    })
+    public Response getLancamentoById(
+            @PathParam("id") @NotNull(message = "O campo id é obrigatório!") final Long idLancamento
+    ) {
+        Lancamento lancamento = lancamentoService.findByIdOrThrow(idLancamento);
+        return Response.ok(lancamentoMapper.lancamenToLancamentoDTOResponse(lancamento)).build();
     }
 
 

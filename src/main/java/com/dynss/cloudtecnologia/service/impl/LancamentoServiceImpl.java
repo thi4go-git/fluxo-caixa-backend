@@ -11,7 +11,7 @@ import com.dynss.cloudtecnologia.model.repository.LancamentoRepository;
 import com.dynss.cloudtecnologia.rest.dto.*;
 import com.dynss.cloudtecnologia.rest.mapper.LancamentoMapper;
 import com.dynss.cloudtecnologia.service.LancamentoService;
-import com.dynss.cloudtecnologia.utils.FileUtil;
+import com.dynss.cloudtecnologia.utils.FilesUtil;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -196,18 +196,22 @@ public class LancamentoServiceImpl implements LancamentoService {
     @Override
     @Transactional
     public void uploadAnexo(AnexoUploaDTO anexoUploaDTO, Long idLancamento) {
-        Anexo anexo = new Anexo();
-        anexo.setNome(anexoUploaDTO.getNome());
-        anexo.setType(anexoUploaDTO.getType());
+
+        Lancamento lancamento = lancamentoRepository.findByIdOrThrow(idLancamento);
+
+        Anexo anexoUpdate = lancamento.getAnexo();
+        anexoUpdate.setNome(anexoUploaDTO.getNome());
+        anexoUpdate.setType(anexoUploaDTO.getType());
+
         try {
-            anexo.setAnexoByte(FileUtil.inputStreamToByteArray(anexoUploaDTO.getInputStream()));
+            anexoUpdate.setAnexoByte(FilesUtil.inputStreamToByteArray(anexoUploaDTO.getInputStream()));
         } catch (IOException e) {
             throw new GeralException("Erro ao converter Stream para ByteArray");
         }
-        anexoService.save(anexo);
 
-        Lancamento lancamento = lancamentoRepository.findByIdOrThrow(idLancamento);
-        lancamento.setAnexo(anexo);
+        anexoService.save(anexoUpdate);
+        lancamento.setAnexo(anexoUpdate);
+        lancamentoRepository.persist(lancamento);
     }
 
     @Override
