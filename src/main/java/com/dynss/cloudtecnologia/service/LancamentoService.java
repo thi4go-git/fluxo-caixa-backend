@@ -4,8 +4,6 @@ import com.dynss.cloudtecnologia.model.entity.Lancamento;
 import com.dynss.cloudtecnologia.model.enums.Situacao;
 import com.dynss.cloudtecnologia.model.enums.TipoLancamento;
 import com.dynss.cloudtecnologia.rest.dto.*;
-
-
 import java.util.List;
 
 public interface LancamentoService {
@@ -28,7 +26,7 @@ public interface LancamentoService {
 
     void deleteByIdList(List<String> idsDeletar);
 
-    LancamentoNewDTO update(LancamentoNewDTO dto);
+    LancamentoUpdateDTO update(LancamentoUpdateDTO dto);
 
     List<Lancamento> lancamentosUsuarioPorNatureza(final String username, Long idNatureza);
 

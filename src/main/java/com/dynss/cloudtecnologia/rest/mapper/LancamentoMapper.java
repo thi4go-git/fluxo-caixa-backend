@@ -23,8 +23,7 @@ public class LancamentoMapper {
     public LancamentoDataDTO listLancamentoToLancamentoDataDTO(List<Lancamento> lancamentos, String dataInicio, String dataFim) {
         LancamentoDataDTO lancamentoDataDTO = new LancamentoDataDTO();
 
-        List<LancamentoDTOResponse> lancamentoDTOResponses =
-                lancamentos.stream().map(this::lancamenToLancamentoDTOResponse).collect(Collectors.toList());
+        List<LancamentoDTOResponse> lancamentoDTOResponses = lancamentos.stream().map(this::lancamenToLancamentoDTOResponse).collect(Collectors.toList());
 
         lancamentoDataDTO.setDataInicio(LocalDate.parse(dataInicio));
         lancamentoDataDTO.setDataFim(LocalDate.parse(dataFim));
@@ -34,8 +33,7 @@ public class LancamentoMapper {
         return lancamentoDataDTO;
     }
 
-    public DashboardDTO listLancamentoReflectionToDashboardDTO(List<LancamentoReflectionDTO> lancamentos,
-                                                               long sumEntradas, long sumSaidas, Integer ano) {
+    public DashboardDTO listLancamentoReflectionToDashboardDTO(List<LancamentoReflectionDTO> lancamentos, long sumEntradas, long sumSaidas, Integer ano) {
         DashboardDTO dashboardDTO = new DashboardDTO();
         dashboardDTO.setLancamentos(lancamentos);
         dashboardDTO.setSumEntradas(sumEntradas);
@@ -47,8 +45,7 @@ public class LancamentoMapper {
     }
 
 
-    public Lancamento newLancamentoCreate(LancamentoNewDTO dto, Integer nrParcela, Usuario user,
-                                          BigDecimal valorParcela, LocalDate dataLancamento, Natureza natureza) {
+    public Lancamento newLancamentoCreate(LancamentoNewDTO dto, Integer nrParcela, Usuario user, BigDecimal valorParcela, LocalDate dataLancamento, Natureza natureza) {
         Lancamento lancamento = new Lancamento();
         lancamento.setTipo(dto.getTipo());
         lancamento.setDescricao(dto.getDescricao());
@@ -69,6 +66,7 @@ public class LancamentoMapper {
         if (Objects.nonNull(lancamento.getAnexo())) {
             dto.setNomeAnexo(lancamento.getAnexo().getNome());
         }
+        dto.setNatureza(lancamento.getNatureza().getDescricao());
 
         return dto;
     }

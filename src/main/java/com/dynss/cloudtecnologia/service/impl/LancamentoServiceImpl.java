@@ -162,20 +162,21 @@ public class LancamentoServiceImpl implements LancamentoService {
 
     @Override
     @Transactional
-    public LancamentoNewDTO update(LancamentoNewDTO dto) {
+    public LancamentoUpdateDTO update(LancamentoUpdateDTO dto) {
         Usuario usuario = usuarioService.findByUsernameOrThrow(dto.getUsername());
-        Natureza natureza = naturezaService.getNaturezaByUsuarioAndIDOrThrow(usuario, dto.getIdNatureza());
+        Natureza natureza = naturezaService.getNaturezaByUsuarioAndDescricaoOrThrow(usuario, dto.getNatureza());
         Lancamento lancamento = lancamentoRepository.findByIdAndUsuarioOrThrow(usuario, dto.getId());
 
         if (dto.getTipo() == TipoLancamento.DEBITO) {
-            dto.setValorTotal(dto.getValorTotal().negate());
+            lancamento.setValorParcela(dto.getValorParcela().negate());
         }
+
         lancamento.setTipo(dto.getTipo());
         lancamento.setDescricao(dto.getDescricao());
-        lancamento.setDataLancamento(dto.getDataReferencia());
-        lancamento.setValorParcela(dto.getValorTotal());
+        lancamento.setDataLancamento(dto.getDataLancamento());
         lancamento.setNatureza(natureza);
         lancamento.setDataAlteracao(LocalDate.now());
+        lancamento.setSituacao(dto.getSituacao());
 
         lancamentoRepository.persist(lancamento);
 

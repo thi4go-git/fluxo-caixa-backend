@@ -48,7 +48,7 @@ public class Lancamento {
 
     Situacao situacao;
 
-    @Column(name = "data_criacao")
+    @Column(name = "data_criacao", updatable = false)
     private LocalDate dataCriacao;
 
     @Column(name = "data_alteracao")

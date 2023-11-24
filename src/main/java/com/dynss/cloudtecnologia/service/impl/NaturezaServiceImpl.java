@@ -60,6 +60,11 @@ public class NaturezaServiceImpl implements NaturezaService {
     }
 
     @Override
+    public Natureza getNaturezaByUsuarioAndDescricaoOrThrow(Usuario usuario, String descricaoNatureza) {
+        return naturezaRepository.findByUsuarioAndDescricaoThrow(usuario, descricaoNatureza);
+    }
+
+    @Override
     public List<Natureza> getNaturezasByUsername(String username) {
         Usuario usuario = usuarioService.findByUsernameOrThrow(username);
         return naturezaRepository.getNaturezasByUsuario(usuario);

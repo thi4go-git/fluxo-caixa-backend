@@ -1,21 +1,21 @@
 package com.dynss.cloudtecnologia.rest.dto;
 
+
 import com.dynss.cloudtecnologia.anottation.UsuarioNaoLocalizado;
+import com.dynss.cloudtecnologia.model.enums.Situacao;
 import com.dynss.cloudtecnologia.model.enums.TipoLancamento;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class LancamentoNewDTO {
+public class LancamentoUpdateDTO {
 
+    @NotNull(message = "{campo.id.obrigatorio}")
     Long id;
 
     @NotBlank(message = "{campo.username.obrigatorio}")
@@ -23,22 +23,21 @@ public class LancamentoNewDTO {
     private String username;
 
     @NotNull(message = "{campo.tipo.obrigatorio}")
-    private TipoLancamento tipo;
+    TipoLancamento tipo;
 
     @NotBlank(message = "{campo.descricao.obrigatorio}")
-    private String descricao;
+    String descricao;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @NotNull(message = "{campo.data_referencia.obrigatorio}")
-    private LocalDate dataReferencia;
+    @NotNull(message = "{campo.data_lancamento.obrigatorio}")
+    LocalDate dataLancamento;
 
-    @NotNull(message = "{campo.valor_total.obrigatorio}")
-    private BigDecimal valorTotal;
+    @NotNull(message = "{campo.valorParcela.obrigatorio}")
+    BigDecimal valorParcela;
 
-    @NotNull(message = "{campo.qtde_parcelas.obrigatorio}")
-    private Integer qtdeParcelas;
+    @NotBlank(message = "{campo.natureza.obrigatorio}")
+    String natureza;
 
-    @NotNull(message = "{campo.id_natureza.obrigatorio}")
-    private Long idNatureza;
-
+    @NotNull(message = "{campo.situacao.obrigatorio}")
+    Situacao situacao;
 }

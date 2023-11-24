@@ -1,7 +1,5 @@
 package com.dynss.cloudtecnologia.rest.dto;
 
-
-import com.dynss.cloudtecnologia.model.entity.Natureza;
 import com.dynss.cloudtecnologia.model.enums.Situacao;
 import com.dynss.cloudtecnologia.model.enums.TipoLancamento;
 import lombok.AllArgsConstructor;
@@ -22,7 +20,7 @@ public class LancamentoDTOResponse {
     BigDecimal valorParcela;
     Integer qtdeParcelas;
     Integer nrParcela;
-    Natureza natureza;
+    String natureza;
     Situacao situacao;
     LocalDate dataCriacao;
     LocalDate dataAlteracao;

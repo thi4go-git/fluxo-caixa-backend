@@ -242,16 +242,16 @@ public class LancamentoController {
     @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "Lançamento atualizado com Sucesso!",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = LancamentoNewDTO.class))),
+                            schema = @Schema(implementation = LancamentoUpdateDTO.class))),
             @APIResponse(responseCode = "500", description = SERVER_ERROR),
             @APIResponse(responseCode = "404", description = USER_NOTFOUND),
     })
     public Response update(
             @RequestBody(description = "DTO do Lançamento a ser atualizado", required = true,
-                    content = @Content(schema = @Schema(implementation = LancamentoNewDTO.class))) @Valid final LancamentoNewDTO dto
+                    content = @Content(schema = @Schema(implementation = LancamentoUpdateDTO.class))) @Valid final LancamentoUpdateDTO dtoUpdate
     ) {
-        LancamentoNewDTO dtoUpdate = lancamentoService.update(dto);
-        return Response.ok(dtoUpdate).build();
+        LancamentoUpdateDTO dtoUpdateOk = lancamentoService.update(dtoUpdate);
+        return Response.ok(dtoUpdateOk).build();
     }
 
 

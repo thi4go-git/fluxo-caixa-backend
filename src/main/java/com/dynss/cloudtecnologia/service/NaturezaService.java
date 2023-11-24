@@ -16,6 +16,8 @@ public interface NaturezaService {
 
     Natureza getNaturezaByUsuarioAndIDOrThrow(final Usuario usuario, final Long id);
 
+    Natureza getNaturezaByUsuarioAndDescricaoOrThrow(final Usuario usuario, final String descricaoNatureza);
+
     List<Natureza>  getNaturezasByUsername(String username);
 
     void deletarNatureza(final String username, final String descricaoNatureza);
