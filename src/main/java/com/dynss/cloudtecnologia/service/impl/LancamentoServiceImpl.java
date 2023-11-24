@@ -23,6 +23,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 
 
 @ApplicationScoped
@@ -73,8 +74,7 @@ public class LancamentoServiceImpl implements LancamentoService {
         if (dto.getTipo() == TipoLancamento.DEBITO) {
             dto.setValorTotal(dto.getValorTotal().negate());
         }
-        BigDecimal vlrParcelas = dto.getValorTotal().divide(
-                new BigDecimal(dto.getQtdeParcelas()), MathContext.DECIMAL128).setScale(2, RoundingMode.HALF_EVEN);
+        BigDecimal vlrParcelas = dto.getValorTotal().divide(new BigDecimal(dto.getQtdeParcelas()), MathContext.DECIMAL128).setScale(2, RoundingMode.HALF_EVEN);
         for (int parcelaIndex = 1; parcelaIndex <= dto.getQtdeParcelas(); parcelaIndex++) {
             int parcela = parcelaIndex;
             LocalDate dataLancamento;
@@ -97,8 +97,7 @@ public class LancamentoServiceImpl implements LancamentoService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate dataInicio = LocalDate.parse(dataInicioStr, formatter);
         LocalDate dataFim = LocalDate.parse(dataFimStr, formatter);
-        List<Lancamento> lancamentosDate = lancamentoRepository
-                .listarLancamentosByUsuarioDate(usuario, dataInicio, dataFim);
+        List<Lancamento> lancamentosDate = lancamentoRepository.listarLancamentosByUsuarioDate(usuario, dataInicio, dataFim);
 
         return lancamentoMapper.listLancamentoToLancamentoDataDTO(lancamentosDate, dataInicioStr, dataFimStr);
     }
@@ -107,8 +106,7 @@ public class LancamentoServiceImpl implements LancamentoService {
     @Transactional
     public LancamentoDataDTO listarLancamentosByUsuarioDateFilter(LancamentoFilterDTO dtoFilter) {
         Usuario usuario = usuarioService.findByUsernameOrThrow(dtoFilter.getUsername());
-        List<Lancamento> lancamentosDateFilter = lancamentoRepository
-                .listarLancamentosByUsuarioDateFilter(usuario, dtoFilter);
+        List<Lancamento> lancamentosDateFilter = lancamentoRepository.listarLancamentosByUsuarioDateFilter(usuario, dtoFilter);
 
         return lancamentoMapper.listLancamentoToLancamentoDataDTO(lancamentosDateFilter, dtoFilter.getDataInicio(), dtoFilter.getDataFim());
     }
@@ -129,8 +127,7 @@ public class LancamentoServiceImpl implements LancamentoService {
     public DashboardDTO getLancamentosDashboard(String username) {
         Usuario usuario = usuarioService.findByUsernameOrThrow(username);
 
-        List<LancamentoReflectionDTO> lancamentos = lancamentoRepository
-                .getLancamentosDashboard(usuario);
+        List<LancamentoReflectionDTO> lancamentos = lancamentoRepository.getLancamentosDashboard(usuario);
         long sumEntradas = 0;
         long sumSaidas = 0;
         Integer ano = LocalDate.now().getYear();
@@ -139,8 +136,7 @@ public class LancamentoServiceImpl implements LancamentoService {
             sumSaidas = sumSaidas + refle.getSaidas();
         }
 
-        return lancamentoMapper
-                .listLancamentoReflectionToDashboardDTO(lancamentos, sumEntradas, sumSaidas, ano);
+        return lancamentoMapper.listLancamentoReflectionToDashboardDTO(lancamentos, sumEntradas, sumSaidas, ano);
 
     }
 
@@ -199,19 +195,30 @@ public class LancamentoServiceImpl implements LancamentoService {
 
         Lancamento lancamento = lancamentoRepository.findByIdOrThrow(idLancamento);
 
-        Anexo anexoUpdate = lancamento.getAnexo();
-        anexoUpdate.setNome(anexoUploaDTO.getNome());
-        anexoUpdate.setType(anexoUploaDTO.getType());
-
+        byte[] anexoByte;
         try {
-            anexoUpdate.setAnexoByte(FilesUtil.inputStreamToByteArray(anexoUploaDTO.getInputStream()));
+            anexoByte = FilesUtil.inputStreamToByteArray(anexoUploaDTO.getInputStream());
         } catch (IOException e) {
             throw new GeralException("Erro ao converter Stream para ByteArray");
         }
 
-        anexoService.save(anexoUpdate);
-        lancamento.setAnexo(anexoUpdate);
-        lancamentoRepository.persist(lancamento);
+        if (Objects.nonNull(lancamento.getAnexo())) {
+            AnexoDTO dtoUpload = new AnexoDTO();
+            dtoUpload.setId(lancamento.getAnexo().getId());
+            dtoUpload.setNome(anexoUploaDTO.getNome());
+            dtoUpload.setType(anexoUploaDTO.getType());
+            dtoUpload.setAnexoByte(anexoByte);
+
+            lancamento.setAnexo(anexoService.atualizar(dtoUpload));
+        } else {
+            Anexo novoAnexo = new Anexo();
+            novoAnexo.setNome(anexoUploaDTO.getNome());
+            novoAnexo.setType(anexoUploaDTO.getType());
+            novoAnexo.setAnexoByte(anexoByte);
+
+            lancamento.setAnexo(anexoService.save(novoAnexo));
+        }
+
     }
 
     @Override
