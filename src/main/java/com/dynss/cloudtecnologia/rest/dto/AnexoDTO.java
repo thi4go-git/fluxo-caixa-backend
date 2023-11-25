@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 public class AnexoDTO {
-    private Long id;
-    private String nome;
-    private String type;
-    private byte[] anexoByte;
+    Long id;
+    String nome;
+    String type;
+    byte[] anexoByte;
 }
