@@ -167,6 +167,19 @@ public class LancamentoController {
 
 
     @GET
+    @Path("/origem")
+    @Operation(summary = "Listar tipos de Origens")
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Tipos de Origem listado com Sucesso!",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON)),
+            @APIResponse(responseCode = "500", description = SERVER_ERROR),
+    })
+    public Response findAllOrigem() {
+        return Response.ok(
+                lancamentoService.listarOrigem()).build();
+    }
+
+    @GET
     @Path("/dashboard")
     @Operation(summary = "Listar os Lançamentos do ano corrente por username")
     @APIResponses(value = {

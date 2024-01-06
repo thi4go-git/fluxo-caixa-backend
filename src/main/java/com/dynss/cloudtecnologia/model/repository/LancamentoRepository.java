@@ -89,8 +89,7 @@ public class LancamentoRepository implements PanacheRepository<Lancamento> {
             query += " AND id = :id ";
             params.put(COLUMN_ID, lancamento.getId());
         }
-        if (lancamento.getTipo() != null &&
-                !lancamento.getTipo().equals("TUDO")) {
+        if (lancamento.getTipo() != null) {
             query += " AND tipo = :tipo ";
             params.put("tipo", lancamento.getTipo());
         }
@@ -117,6 +116,10 @@ public class LancamentoRepository implements PanacheRepository<Lancamento> {
         if (lancamento.getSituacao() != null) {
             query += " AND situacao = :situacao ";
             params.put("situacao", lancamento.getSituacao());
+        }
+        if (lancamento.getOrigem() != null) {
+            query += " AND origem = :origem ";
+            params.put("origem", lancamento.getOrigem());
         }
 
         query += " ORDER BY data_lancamento asc ";

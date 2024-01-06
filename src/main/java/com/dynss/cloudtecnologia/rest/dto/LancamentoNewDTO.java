@@ -1,6 +1,7 @@
 package com.dynss.cloudtecnologia.rest.dto;
 
 import com.dynss.cloudtecnologia.anottation.UsuarioNaoLocalizado;
+import com.dynss.cloudtecnologia.model.enums.Origem;
 import com.dynss.cloudtecnologia.model.enums.TipoLancamento;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,9 @@ public class LancamentoNewDTO {
 
     @NotNull(message = "{campo.tipo.obrigatorio}")
     private TipoLancamento tipo;
+
+    @NotNull(message = "{campo.origem.obrigatorio}")
+    private Origem origem;
 
     @NotBlank(message = "{campo.descricao.obrigatorio}")
     private String descricao;
