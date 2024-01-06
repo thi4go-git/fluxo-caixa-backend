@@ -56,6 +56,7 @@ public class LancamentoMapper {
         lancamento.setNatureza(natureza);
         lancamento.setUsuario(user);
         lancamento.setSituacao(Situacao.EM_ABERTO);
+        lancamento.setOrigem(dto.getOrigem());
         lancamento.setDataCriacao(LocalDate.now());
 
         return lancamento;

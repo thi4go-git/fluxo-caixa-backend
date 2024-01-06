@@ -1,6 +1,7 @@
 package com.dynss.cloudtecnologia.service;
 
 import com.dynss.cloudtecnologia.model.entity.Lancamento;
+import com.dynss.cloudtecnologia.model.enums.Origem;
 import com.dynss.cloudtecnologia.model.enums.Situacao;
 import com.dynss.cloudtecnologia.model.enums.TipoLancamento;
 import com.dynss.cloudtecnologia.rest.dto.*;
@@ -19,6 +20,8 @@ public interface LancamentoService {
     List<Situacao> listarSituacao();
 
     List<TipoLancamento> listarTipoLancamento();
+
+    List<Origem> listarOrigem();
 
     DashboardDTO getLancamentosDashboard(String username);
 

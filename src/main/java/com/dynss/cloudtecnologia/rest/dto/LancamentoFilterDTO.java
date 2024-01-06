@@ -1,6 +1,7 @@
 package com.dynss.cloudtecnologia.rest.dto;
 
 import com.dynss.cloudtecnologia.anottation.UsuarioNaoLocalizado;
+import com.dynss.cloudtecnologia.model.enums.Origem;
 import com.dynss.cloudtecnologia.model.enums.Situacao;
 import com.dynss.cloudtecnologia.model.enums.TipoLancamento;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ public class LancamentoFilterDTO {
     Integer nrParcela = null;
     Integer idNatureza = null;
     Situacao situacao = null;
+    Origem origem = null;
     String dataInicio;
     String dataFim;
 

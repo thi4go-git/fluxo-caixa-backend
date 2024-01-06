@@ -5,6 +5,7 @@ import com.dynss.cloudtecnologia.model.entity.Anexo;
 import com.dynss.cloudtecnologia.model.entity.Lancamento;
 import com.dynss.cloudtecnologia.model.entity.Natureza;
 import com.dynss.cloudtecnologia.model.entity.Usuario;
+import com.dynss.cloudtecnologia.model.enums.Origem;
 import com.dynss.cloudtecnologia.model.enums.Situacao;
 import com.dynss.cloudtecnologia.model.enums.TipoLancamento;
 import com.dynss.cloudtecnologia.model.repository.LancamentoRepository;
@@ -70,21 +71,21 @@ public class LancamentoServiceImpl implements LancamentoService {
         return dto;
     }
 
-    private void efetuarLancamento(Usuario usuario, Natureza natureza, LancamentoNewDTO dto) {
-        if (dto.getTipo() == TipoLancamento.DEBITO) {
-            dto.setValorTotal(dto.getValorTotal().negate());
+    private void efetuarLancamento(Usuario usuario, Natureza natureza, LancamentoNewDTO lancamentoNewDTO) {
+        if (lancamentoNewDTO.getTipo() == TipoLancamento.DEBITO) {
+            lancamentoNewDTO.setValorTotal(lancamentoNewDTO.getValorTotal().negate());
         }
-        BigDecimal vlrParcelas = dto.getValorTotal().divide(new BigDecimal(dto.getQtdeParcelas()), MathContext.DECIMAL128).setScale(2, RoundingMode.HALF_EVEN);
-        for (int parcelaIndex = 1; parcelaIndex <= dto.getQtdeParcelas(); parcelaIndex++) {
+        BigDecimal vlrParcelas = lancamentoNewDTO.getValorTotal().divide(new BigDecimal(lancamentoNewDTO.getQtdeParcelas()), MathContext.DECIMAL128).setScale(2, RoundingMode.HALF_EVEN);
+        for (int parcelaIndex = 1; parcelaIndex <= lancamentoNewDTO.getQtdeParcelas(); parcelaIndex++) {
             int parcela = parcelaIndex;
             LocalDate dataLancamento;
             if (parcela == 1) {
-                dataLancamento = dto.getDataReferencia();
-                Lancamento lancamento = lancamentoMapper.newLancamentoCreate(dto, parcela, usuario, vlrParcelas, dataLancamento, natureza);
+                dataLancamento = lancamentoNewDTO.getDataReferencia();
+                Lancamento lancamento = lancamentoMapper.newLancamentoCreate(lancamentoNewDTO, parcela, usuario, vlrParcelas, dataLancamento, natureza);
                 lancamentoRepository.persist(lancamento);
             } else {
-                dataLancamento = dto.getDataReferencia().plusMonths(parcela - 1);
-                Lancamento lancamento = lancamentoMapper.newLancamentoCreate(dto, parcela, usuario, vlrParcelas, dataLancamento, natureza);
+                dataLancamento = lancamentoNewDTO.getDataReferencia().plusMonths(parcela - 1);
+                Lancamento lancamento = lancamentoMapper.newLancamentoCreate(lancamentoNewDTO, parcela, usuario, vlrParcelas, dataLancamento, natureza);
                 lancamentoRepository.persist(lancamento);
             }
         }
@@ -120,6 +121,11 @@ public class LancamentoServiceImpl implements LancamentoService {
     @Override
     public List<TipoLancamento> listarTipoLancamento() {
         return List.of(TipoLancamento.values());
+    }
+
+    @Override
+    public List<Origem> listarOrigem() {
+        return List.of(Origem.values());
     }
 
     @Override
@@ -177,6 +183,7 @@ public class LancamentoServiceImpl implements LancamentoService {
         lancamento.setNatureza(natureza);
         lancamento.setDataAlteracao(LocalDate.now());
         lancamento.setSituacao(dto.getSituacao());
+        lancamento.setOrigem(dto.getOrigem());
 
         lancamentoRepository.persist(lancamento);
 

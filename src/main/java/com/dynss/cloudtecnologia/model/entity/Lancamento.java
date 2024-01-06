@@ -1,5 +1,6 @@
 package com.dynss.cloudtecnologia.model.entity;
 
+import com.dynss.cloudtecnologia.model.enums.Origem;
 import com.dynss.cloudtecnologia.model.enums.Situacao;
 import com.dynss.cloudtecnologia.model.enums.TipoLancamento;
 import lombok.AllArgsConstructor;
@@ -46,13 +47,16 @@ public class Lancamento {
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
-    Situacao situacao;
+    private Situacao situacao;
 
     @Column(name = "data_criacao", updatable = false)
     private LocalDate dataCriacao;
 
     @Column(name = "data_alteracao")
     private LocalDate dataAlteracao;
+
+    @Column
+    private Origem origem;
 
     @OneToOne
     @JoinColumn(name = "id_anexo")
