@@ -1,5 +1,6 @@
 package com.dynss.cloudtecnologia.rest.controller;
 
+import com.dynss.cloudtecnologia.model.enums.Origem;
 import com.dynss.cloudtecnologia.model.enums.TipoLancamento;
 import com.dynss.cloudtecnologia.rest.dto.LancamentoNewDTO;
 import com.dynss.cloudtecnologia.rest.dto.NaturezaNewDTO;
@@ -102,6 +103,7 @@ class LancamentoControllerTest {
         lancamentoNewDTO.setValorTotal(new BigDecimal(2500));
         lancamentoNewDTO.setQtdeParcelas(5);
         lancamentoNewDTO.setDataReferencia(LocalDate.now());
+        lancamentoNewDTO.setOrigem(Origem.PROPRIO);
 
         var respostaLancamento = given()
                 .contentType(MediaType.APPLICATION_JSON)
