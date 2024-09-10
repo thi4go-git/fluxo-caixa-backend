@@ -173,8 +173,11 @@ public class LancamentoServiceImpl implements LancamentoService {
         Natureza natureza = naturezaService.getNaturezaByUsuarioAndDescricaoOrThrow(usuario, dto.getNatureza());
         Lancamento lancamento = lancamentoRepository.findByIdAndUsuarioOrThrow(usuario, dto.getId());
 
+        BigDecimal valorParcela = dto.getValorParcela().abs();
         if (dto.getTipo() == TipoLancamento.DEBITO) {
-            lancamento.setValorParcela(dto.getValorParcela().negate());
+            lancamento.setValorParcela(valorParcela.negate());
+        } else {
+            lancamento.setValorParcela(valorParcela);
         }
 
         lancamento.setTipo(dto.getTipo());
