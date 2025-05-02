@@ -162,13 +162,11 @@ public class LancamentoServiceImpl implements LancamentoService {
         }
     }
 
-    @Transactional
     private void deletarPeloId(Long idLancamentoDeletar) {
         Lancamento lancamento = lancamentoRepository.findByIdOrThrow(idLancamentoDeletar);
         lancamentoRepository.deleteById(lancamento.getId());
     }
 
-    @Transactional
     private void marcarLancamentoComoPagoPeloId(Long idLancamentoDeletar) {
         Lancamento lancamento = lancamentoRepository.findByIdOrThrow(idLancamentoDeletar);
         lancamento.setSituacao(Situacao.PAGO);
@@ -249,6 +247,7 @@ public class LancamentoServiceImpl implements LancamentoService {
 
 
     @Override
+    @Transactional
     public void operacaoPersonalizada(Integer tipoOperacao,List<String> idsLancamento) {
         idsLancamento.forEach( idLancamento->{
             Long idLancamentoLong = Long.parseLong(idLancamento);
