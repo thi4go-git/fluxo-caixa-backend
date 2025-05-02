@@ -301,4 +301,22 @@ public class LancamentoController {
         return Response.ok(anexoMapper.lancamentoToAnexoDownloaDTO(lancamento)).build();
     }
 
+    @POST
+    @Path("/operacao-personalizada")
+    @Operation(summary = "Realizar Operacão personalizada")
+    @APIResponses(value = {
+            @APIResponse(responseCode = "204",
+                    description = "Operação Realizada com Sucesso",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON)),
+            @APIResponse(responseCode = "500", description = SERVER_ERROR),
+    })
+    public Response operacaoPersonalizada(
+            @QueryParam("username") @Parameter(required = true, example = "123.user") @NotBlank(message = "username é obrigatório") final String username,
+            @QueryParam("tipoOperacao") @Parameter(required = true, example = "1") @NotNull(message = "tipoOperacao é obrigatório") final Integer tipoOperacao,
+            @RequestBody(description = "Lista de ids dos Lançamentos", required = true) final List<String> lancamentosIds
+    ) {
+        lancamentoService.operacaoPersonalizada(tipoOperacao,lancamentosIds);
+        return Response.noContent().build();
+    }
+
 }

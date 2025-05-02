@@ -4,6 +4,7 @@ import com.dynss.cloudtecnologia.model.entity.Lancamento;
 import com.dynss.cloudtecnologia.model.enums.Origem;
 import com.dynss.cloudtecnologia.model.enums.Situacao;
 import com.dynss.cloudtecnologia.model.enums.TipoLancamento;
+import com.dynss.cloudtecnologia.model.enums.TipoOperacaoLancamento;
 import com.dynss.cloudtecnologia.rest.dto.*;
 import java.util.List;
 
@@ -36,4 +37,6 @@ public interface LancamentoService {
     void uploadAnexo(AnexoUploaDTO anexoUploaDTO, Long idLancamento);
 
     Lancamento findByIdOrThrow(Long idLancamento);
+
+    void operacaoPersonalizada(Integer tipoOperacao,List<String> idsLancamento);
 }
