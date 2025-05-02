@@ -8,6 +8,7 @@ import com.dynss.cloudtecnologia.model.entity.Usuario;
 import com.dynss.cloudtecnologia.model.enums.Origem;
 import com.dynss.cloudtecnologia.model.enums.Situacao;
 import com.dynss.cloudtecnologia.model.enums.TipoLancamento;
+import com.dynss.cloudtecnologia.model.enums.TipoOperacaoLancamento;
 import com.dynss.cloudtecnologia.model.repository.LancamentoRepository;
 import com.dynss.cloudtecnologia.rest.dto.*;
 import com.dynss.cloudtecnologia.rest.mapper.LancamentoMapper;
@@ -166,6 +167,12 @@ public class LancamentoServiceImpl implements LancamentoService {
         lancamentoRepository.deleteById(lancamento.getId());
     }
 
+    private void marcarLancamentoComoPagoPeloId(Long idLancamentoDeletar) {
+        Lancamento lancamento = lancamentoRepository.findByIdOrThrow(idLancamentoDeletar);
+        lancamento.setSituacao(Situacao.PAGO);
+        lancamentoRepository.persist(lancamento);
+    }
+
     @Override
     @Transactional
     public LancamentoUpdateDTO update(LancamentoUpdateDTO dto) {
@@ -236,5 +243,19 @@ public class LancamentoServiceImpl implements LancamentoService {
     @Transactional
     public Lancamento findByIdOrThrow(Long idLancamento) {
         return lancamentoRepository.findByIdOrThrow(idLancamento);
+    }
+
+
+    @Override
+    @Transactional
+    public void operacaoPersonalizada(Integer tipoOperacao,List<String> idsLancamento) {
+        idsLancamento.forEach( idLancamento->{
+            Long idLancamentoLong = Long.parseLong(idLancamento);
+            if(tipoOperacao.equals(TipoOperacaoLancamento.DELETAR.getId())){
+                this.deletarPeloId(idLancamentoLong);
+            } else if (tipoOperacao.equals(TipoOperacaoLancamento.MARCAR_COMO_PAGO.getId())) {
+                this.marcarLancamentoComoPagoPeloId(idLancamentoLong);
+            }
+        });
     }
 }
