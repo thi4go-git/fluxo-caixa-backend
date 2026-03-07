@@ -4,7 +4,7 @@ import com.dynss.cloudtecnologia.model.entity.Lancamento;
 import com.dynss.cloudtecnologia.rest.dto.*;
 import com.dynss.cloudtecnologia.rest.mapper.AnexoMapper;
 import com.dynss.cloudtecnologia.rest.mapper.LancamentoMapper;
-import com.dynss.cloudtecnologia.service.impl.LancamentoServiceImpl;
+import com.dynss.cloudtecnologia.service.LancamentoService;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -16,7 +16,6 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.security.*;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -27,6 +26,8 @@ import javax.inject.Inject;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import static com.dynss.cloudtecnologia.constants.ControllerConstants.*;
+
 
 
 @Path("/lancamentos")
@@ -45,7 +46,7 @@ public class LancamentoController {
 
 
     @Inject
-    private LancamentoServiceImpl lancamentoService;
+    private LancamentoService lancamentoService;
 
     @Inject
     private AnexoMapper anexoMapper;
@@ -53,12 +54,6 @@ public class LancamentoController {
     @Inject
     private LancamentoMapper lancamentoMapper;
 
-
-    private static final String SERVER_ERROR = "Erro Interno do Servidor.";
-
-    private static final String USER_NOTFOUND = "Usuário com o username informado não localizado.";
-
-    private static final String LANCAMENTO_NOTFOUND = "Lançamento não localizado.";
 
 
     @POST
@@ -72,7 +67,8 @@ public class LancamentoController {
     })
     public Response save(
             @RequestBody(description = "DTO do Lançamento a ser criado", required = true,
-                    content = @Content(schema = @Schema(implementation = LancamentoNewDTO.class))) @Valid final LancamentoNewDTO dto
+                    content = @Content(schema = @Schema(implementation = LancamentoNewDTO.class))
+            ) @Valid final LancamentoNewDTO dto
     ) {
         LancamentoNewDTO novo = lancamentoService.lancar(dto);
         return Response

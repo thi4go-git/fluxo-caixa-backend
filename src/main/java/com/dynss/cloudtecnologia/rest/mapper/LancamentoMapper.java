@@ -7,7 +7,6 @@ import com.dynss.cloudtecnologia.model.entity.Usuario;
 import com.dynss.cloudtecnologia.model.enums.Situacao;
 import com.dynss.cloudtecnologia.rest.dto.*;
 import lombok.extern.slf4j.Slf4j;
-
 import javax.enterprise.context.ApplicationScoped;
 import java.math.BigDecimal;
 import java.time.LocalDate;

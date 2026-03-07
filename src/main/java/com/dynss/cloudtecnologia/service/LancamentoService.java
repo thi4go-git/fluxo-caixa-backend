@@ -4,17 +4,18 @@ import com.dynss.cloudtecnologia.model.entity.Lancamento;
 import com.dynss.cloudtecnologia.model.enums.Origem;
 import com.dynss.cloudtecnologia.model.enums.Situacao;
 import com.dynss.cloudtecnologia.model.enums.TipoLancamento;
-import com.dynss.cloudtecnologia.model.enums.TipoOperacaoLancamento;
 import com.dynss.cloudtecnologia.rest.dto.*;
 import java.util.List;
+
 
 public interface LancamentoService {
 
     LancamentoNewDTO lancar(LancamentoNewDTO dto);
 
 
-    LancamentoDataDTO listarLancamentosByUsuarioDate(String username,
-                                                     String dataInicio, String dataFim);
+    LancamentoDataDTO listarLancamentosByUsuarioDate(
+         String username, String dataInicio, String dataFim
+    );
 
     LancamentoDataDTO listarLancamentosByUsuarioDateFilter(LancamentoFilterDTO dtoFilter);
 

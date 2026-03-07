@@ -4,7 +4,7 @@ package com.dynss.cloudtecnologia.rest.controller;
 import com.dynss.cloudtecnologia.model.entity.Usuario;
 import com.dynss.cloudtecnologia.rest.dto.UsuarioDTO;
 import com.dynss.cloudtecnologia.rest.mapper.UsuarioMapper;
-import com.dynss.cloudtecnologia.service.impl.UsuarioServiceImpl;
+import com.dynss.cloudtecnologia.service.UsuarioService;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -15,7 +15,6 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.security.*;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -23,6 +22,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import static com.dynss.cloudtecnologia.constants.ControllerConstants.SERVER_ERROR;
+import static com.dynss.cloudtecnologia.constants.ControllerConstants.USUARIO_NOTFOUND;
+
 
 
 @Path("/usuarios")
@@ -40,13 +42,12 @@ import java.util.List;
 public class UsuarioController {
 
     @Inject
-    private UsuarioServiceImpl userService;
+    private UsuarioService userService;
 
     @Inject
     private UsuarioMapper usuarioMapper;
 
-    private static final String SERVER_ERROR = "Erro Interno no servidor.";
-    private static final String USUARIO_NOTFOUND = "Usuário não encontrado.";
+
 
     @POST
     @RequestBody(required = true)
@@ -54,14 +55,14 @@ public class UsuarioController {
     @APIResponses(value = {
             @APIResponse(responseCode = "201", description = "Usuário criado com sucesso",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = UsuarioDTO.class))),
+                            schema = @Schema(implementation = UsuarioDTO.class))
+            ),
             @APIResponse(responseCode = "500", description = SERVER_ERROR)
-
     })
     public Response save(
             @RequestBody(description = "DTO do Usuário a ser criado", required = true,
-                    content = @Content(schema = @Schema(implementation = UsuarioDTO.class)))
-            @Valid final UsuarioDTO dto
+                    content = @Content(schema = @Schema(implementation = UsuarioDTO.class))
+            ) @Valid final UsuarioDTO dto
     ) {
         Usuario novo = userService.save(dto);
         return Response
@@ -76,7 +77,8 @@ public class UsuarioController {
     @APIResponses(value = {
             @APIResponse(responseCode = "200",
                     description = "Buscar Usuário por ID",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UsuarioDTO.class))),
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UsuarioDTO.class))
+            ),
             @APIResponse(responseCode = "500", description = SERVER_ERROR),
             @APIResponse(responseCode = "404", description = USUARIO_NOTFOUND)
     })
@@ -93,7 +95,8 @@ public class UsuarioController {
     @APIResponses(value = {
             @APIResponse(responseCode = "200",
                     description = "Listagem de Usuários",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UsuarioDTO.class))),
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UsuarioDTO.class))
+            ),
             @APIResponse(responseCode = "500", description = SERVER_ERROR)
     })
     public Response findAll() {

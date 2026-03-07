@@ -9,11 +9,11 @@ import com.dynss.cloudtecnologia.model.repository.NaturezaRepository;
 import com.dynss.cloudtecnologia.rest.dto.NaturezaNewDTO;
 import com.dynss.cloudtecnologia.rest.mapper.NaturezaMapper;
 import com.dynss.cloudtecnologia.service.NaturezaService;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.List;
+
 
 @ApplicationScoped
 public class NaturezaServiceImpl implements NaturezaService {
@@ -45,19 +45,10 @@ public class NaturezaServiceImpl implements NaturezaService {
     }
 
     @Override
-    public Natureza findById(Long id) {
-        return naturezaRepository.findById(id);
-    }
-
-    @Override
     public Natureza findByIdOrThrow(Long id) {
         return naturezaRepository.findByIdOrThrow(id);
     }
 
-    @Override
-    public Natureza getNaturezaByUsuarioAndIDOrThrow(Usuario usuario, Long id) {
-        return naturezaRepository.findByUsuarioAndIDOrThrow(usuario, id);
-    }
 
     @Override
     public Natureza getNaturezaByUsuarioAndDescricaoOrThrow(Usuario usuario, String descricaoNatureza) {

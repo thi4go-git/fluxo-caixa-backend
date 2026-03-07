@@ -4,7 +4,6 @@ import com.dynss.cloudtecnologia.config.ModelMapperConfig;
 import com.dynss.cloudtecnologia.model.entity.Natureza;
 import com.dynss.cloudtecnologia.model.entity.Usuario;
 import com.dynss.cloudtecnologia.rest.dto.NaturezaNewDTO;
-
 import javax.enterprise.context.ApplicationScoped;
 import java.util.List;
 import java.util.stream.Collectors;

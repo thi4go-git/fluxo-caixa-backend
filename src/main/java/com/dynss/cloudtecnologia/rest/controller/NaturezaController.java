@@ -6,7 +6,7 @@ import com.dynss.cloudtecnologia.exception.UsuarioNaoEncontradoException;
 import com.dynss.cloudtecnologia.model.entity.Natureza;
 import com.dynss.cloudtecnologia.rest.dto.NaturezaNewDTO;
 import com.dynss.cloudtecnologia.rest.mapper.NaturezaMapper;
-import com.dynss.cloudtecnologia.service.impl.NaturezaServiceImpl;
+import com.dynss.cloudtecnologia.service.NaturezaService;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -17,7 +17,6 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.security.*;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -25,6 +24,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import static com.dynss.cloudtecnologia.constants.ControllerConstants.SERVER_ERROR;
+
+
 
 
 @Path("/naturezas")
@@ -42,13 +44,13 @@ import java.util.List;
 public class NaturezaController {
 
     @Inject
-    private NaturezaServiceImpl naturezaService;
+    private NaturezaService naturezaService;
 
     @Inject
     private NaturezaMapper naturezaMapper;
 
 
-    private static final String SERVER_ERROR = "Erro Interno do Servidor.";
+
 
 
     @POST
