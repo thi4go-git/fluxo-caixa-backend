@@ -1,22 +1,15 @@
 package com.dynss.cloudtecnologia.rest.controller;
 
 
-import com.dynss.cloudtecnologia.service.PluggyItemService;
+import com.dynss.cloudtecnologia.rest.dto.pluggy.PluggyWebhookDTO;
+import com.dynss.cloudtecnologia.service.PluggyService;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import javax.inject.Inject;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.UUID;
-import static com.dynss.cloudtecnologia.constants.ControllerConstants.SERVER_ERROR;
 
 
 
@@ -26,52 +19,24 @@ import static com.dynss.cloudtecnologia.constants.ControllerConstants.SERVER_ERR
 @Tag(name = "Pluggy Item Controller", description = "API de Item Pluggy")
 public class PluggyController {
 
+
     @ConfigProperty(name = "pluggy.webhook.secret")
     String webhookSecret;
 
     @Inject
-    private PluggyItemService pluggyItemService;
-
-
-
-
-
-    @PATCH
-    @Path("/items/{id}")
-    @Operation(summary = "Atualiza trancações do item pelo id")
-    @APIResponses(value = {
-            @APIResponse(responseCode = "200",
-                description = "Atuaizar transaçẽs de um item"
-            ),
-            @APIResponse(responseCode = "500", description = SERVER_ERROR),
-    })
-    public Response atualizarTransacoesItem(
-            @PathParam("id") @Parameter(required = true, example = "5da12074-d868-4827-a540-051234567890")
-            @NotNull(message = "id é obrigatório")
-            final UUID id,
-            @HeaderParam("x-apikey")
-            @NotBlank(message = "xapikey é obrigatório")
-            final String xapikey
-    ) {
-        Object status = pluggyItemService.atualizarTransacoesItem(id, xapikey);
-        return Response.ok(status).build();
-    }
-
+    private PluggyService pluggyService;
 
 
     @POST
     @Path("/webhooks")
     public Response receberWebhook(
-            @RequestBody(description = "Payload do webhoow pluggy", required = true) final Object payload,
+            @RequestBody(description = "Payload do webhoow pluggy", required = true) final PluggyWebhookDTO payload,
             @HeaderParam("Authorization") String authorization
     ) {
         if (authorization == null || !authorization.equals(webhookSecret)) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
-
-        System.out.println("WEBHOOK RECEBIDO");
-        System.out.println(payload);
-
+        pluggyService.receberWebhook(payload);
         return Response.ok().build();
     }
 

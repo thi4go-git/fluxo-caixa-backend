@@ -6,12 +6,12 @@ import com.dynss.cloudtecnologia.model.repository.UsuarioRepository;
 import com.dynss.cloudtecnologia.rest.dto.UsuarioDTO;
 import com.dynss.cloudtecnologia.rest.mapper.UsuarioMapper;
 import com.dynss.cloudtecnologia.service.UsuarioService;
-
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.List;
+
+
 
 @ApplicationScoped
 public class UsuarioServiceImpl implements UsuarioService {
