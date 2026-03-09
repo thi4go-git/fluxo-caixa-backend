@@ -4,6 +4,7 @@ import com.dynss.cloudtecnologia.client.PluggyClient;
 import com.dynss.cloudtecnologia.model.enums.TipoEventoWebhook;
 import com.dynss.cloudtecnologia.rest.dto.pluggy.PluggyAuthRequestDTO;
 import com.dynss.cloudtecnologia.rest.dto.pluggy.PluggyAuthResponseDTO;
+import com.dynss.cloudtecnologia.rest.dto.pluggy.PluggyTransactionsDTO;
 import com.dynss.cloudtecnologia.rest.dto.pluggy.PluggyWebhookDTO;
 import com.dynss.cloudtecnologia.service.PluggyService;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -54,30 +55,27 @@ public class PluggyServiceImpl implements PluggyService {
     }
 
     @Override
-    public Object getTransacoesConta(
+    public PluggyTransactionsDTO getTransacoesConta(
             final String idConta, final String from, final String to
     ) {
         PluggyAuthResponseDTO response = obterApikey();
-        Object transactions = pluggyClient.getTransactions(
+        return pluggyClient.getTransactions(
                 response.getApiKey(), idConta, from, to
         );
-
-        LOG.infof("Transactions Count=%s",transactions);
-        return transactions;
     }
 
     @Override
-    public void receberWebhook(PluggyWebhookDTO payload) {
+    public void receberWebhook(final PluggyWebhookDTO webhook) {
         LOG.infof(
                 "Webhook Pluggy RECEBIDO | event=%s | itemId=%s | connectorId=%s",
-                payload.getEvent(),
-                payload.getItemId(),
-                payload.getConnectorId()
+                webhook.getEvent(),
+                webhook.getItemId(),
+                webhook.getConnectorId()
         );
-        TipoEventoWebhook eventoRecebido = TipoEventoWebhook.fromDescricao(payload.getEvent());
+        TipoEventoWebhook eventoRecebido = TipoEventoWebhook.fromDescricao(webhook.getEvent());
         switch (eventoRecebido) {
             case ITEM_UPDATED:
-                getTransacoesConta(idConta, FROM, TO); // Corrigir aqui: Deve se consultar a conta através do payload.getItemId() ao invés de idConta
+                PluggyTransactionsDTO transactions = getTransacoesConta(idConta, FROM, TO);
                 break;
             case TRANSACTIONS_CREATED:
                 LOG.info("Novas transações disponíveis");

@@ -2,6 +2,7 @@ package com.dynss.cloudtecnologia.client;
 
 import com.dynss.cloudtecnologia.rest.dto.pluggy.PluggyAuthRequestDTO;
 import com.dynss.cloudtecnologia.rest.dto.pluggy.PluggyAuthResponseDTO;
+import com.dynss.cloudtecnologia.rest.dto.pluggy.PluggyTransactionsDTO;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -28,7 +29,7 @@ public interface PluggyClient {
 
     @GET
     @Path("/transactions")
-    Object getTransactions(
+    PluggyTransactionsDTO getTransactions(
            @HeaderParam("X-API-KEY") final String apiKey,
            @QueryParam("accountId") final String accountId,
            @QueryParam("from") final String from,
