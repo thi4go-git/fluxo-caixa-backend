@@ -105,4 +105,21 @@ public class UsuarioController {
     }
 
 
+    @GET
+    @Path("/info")
+    @Operation(summary = "Buscar informações Usuário por JWT")
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200",
+                    description = "Buscar Usuário por ID",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UsuarioDTO.class))
+            ),
+            @APIResponse(responseCode = "500", description = SERVER_ERROR),
+            @APIResponse(responseCode = "404", description = USUARIO_NOTFOUND)
+    })
+    public Response findByTokenJwt() {
+        Usuario userAchado = userService.findByTokenJwt();
+        return Response.ok(usuarioMapper.usuarioToUsuarioResponseDTO(userAchado)).build();
+    }
+
+
 }

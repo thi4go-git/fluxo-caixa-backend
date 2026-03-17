@@ -15,4 +15,6 @@ public interface UsuarioService {
     Usuario findByUsername(String username);
 
     Usuario findByUsernameOrThrow(String username);
+
+    Usuario findByTokenJwt();
 }

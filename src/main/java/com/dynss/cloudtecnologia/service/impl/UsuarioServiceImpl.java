@@ -9,6 +9,7 @@ import com.dynss.cloudtecnologia.service.UsuarioService;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import java.util.List;
 
 
@@ -21,6 +22,9 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Inject
     private UsuarioMapper usuarioMapper;
+
+    @Inject
+    private JsonWebToken jwt;
 
 
     @Override
@@ -50,5 +54,11 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public Usuario findByUsernameOrThrow(String username) {
         return repository.findByUsernameOrThrow(username);
+    }
+
+    @Override
+    public Usuario findByTokenJwt() {
+        final String username = jwt.getClaim("preferred_username");
+        return findByUsernameOrThrow(username);
     }
 }
