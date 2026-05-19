@@ -12,12 +12,12 @@
             steps {
                 withCredentials([file(credentialsId: 'fluxo-caixa-env', variable: 'ENV_FILE')]) {
                     sh '''
-                      cp "$ENV_FILE" .env
-                      chmod 600 .env
+                        cp "$ENV_FILE" .env
+                        chmod 600 .env
 
-                      echo "==== ARQUIVO .ENV ===="
-                      cat .env
-                      echo "======================="
+                        echo "==== ARQUIVO .ENV ===="
+                        cat .env
+                        echo "======================="
                     '''
                 }
             }
@@ -39,7 +39,13 @@
            }
            steps {
                withSonarQubeEnv('SONAR'){
-                   sh "${scannerHome}/bin/sonar-scanner -e -Dsonar.projectKey=fluxo-caixa-backend -Dsonar.host.url=http://cloudtecnologia.dynns.com:9000 -Dsonar.login=5034b1ee53e242e70b049739c2547d0ded913b1f -Dsonar.java.binaries=target"
+                   sh """
+                       ${scannerHome}/bin/sonar-scanner -e \
+                       -Dsonar.projectKey=fluxo-caixa-backend \
+                       -Dsonar.host.url=http://cloudtecnologia.dynns.com:9000 \
+                       -Dsonar.login=5034b1ee53e242e70b049739c2547d0ded913b1f \
+                       -Dsonar.java.binaries=target
+                   """
                }
            }
        }
