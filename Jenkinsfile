@@ -14,6 +14,10 @@
                     sh '''
                       cp "$ENV_FILE" .env
                       chmod 600 .env
+
+                      echo "==== ARQUIVO .ENV ===="
+                      cat .env
+                      echo "======================="
                     '''
                 }
             }
