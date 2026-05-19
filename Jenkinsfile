@@ -35,7 +35,7 @@
         }
        stage('Sonar Analise') {
            environment{
-               scannerHome = tool 'SONAR_SCANNER'
+               scannerHome = tool 'SONAR_SCANNER_JDK25'
            }
            steps {
                withSonarQubeEnv('SONAR'){
