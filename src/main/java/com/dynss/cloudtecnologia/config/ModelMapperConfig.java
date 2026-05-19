@@ -2,8 +2,7 @@ package com.dynss.cloudtecnologia.config;
 
 
 import org.modelmapper.ModelMapper;
-
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class ModelMapperConfig {

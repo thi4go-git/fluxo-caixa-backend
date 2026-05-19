@@ -4,10 +4,10 @@ import com.dynss.cloudtecnologia.exception.EntidadeNaoEncontradaException;
 import com.dynss.cloudtecnologia.model.entity.Anexo;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
-
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import java.util.HashMap;
 import java.util.Map;
+
 
 @ApplicationScoped
 public class AnexoRepository implements PanacheRepository<Anexo> {

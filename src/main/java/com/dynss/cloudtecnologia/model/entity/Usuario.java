@@ -4,7 +4,7 @@ package com.dynss.cloudtecnologia.model.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 
 @Data

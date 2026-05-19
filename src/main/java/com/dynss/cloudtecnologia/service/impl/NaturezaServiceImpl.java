@@ -9,9 +9,9 @@ import com.dynss.cloudtecnologia.model.repository.NaturezaRepository;
 import com.dynss.cloudtecnologia.rest.dto.NaturezaNewDTO;
 import com.dynss.cloudtecnologia.rest.mapper.NaturezaMapper;
 import com.dynss.cloudtecnologia.service.NaturezaService;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import java.util.List;
 
 

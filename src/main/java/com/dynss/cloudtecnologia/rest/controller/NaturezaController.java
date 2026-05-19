@@ -17,12 +17,12 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.security.*;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-import javax.inject.Inject;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.inject.Inject;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.util.List;
 import static com.dynss.cloudtecnologia.constants.ControllerConstants.SERVER_ERROR;
 
@@ -93,7 +93,7 @@ public class NaturezaController {
     @DELETE
     @Operation(summary = "Deleta Natureza Cliente pelo ID")
     @APIResponses(value = {
-            @APIResponse(responseCode = "204", description = "Natureza Deletada", content = @Content(mediaType = MediaType.APPLICATION_JSON)), @APIResponse(responseCode = "204", description = "Deletado", content = @Content(mediaType = MediaType.APPLICATION_JSON)),
+            @APIResponse(responseCode = "204", description = "Natureza Deletada", content = @Content(mediaType = MediaType.APPLICATION_JSON)),
             @APIResponse(responseCode = "500", description = SERVER_ERROR),
             @APIResponse(responseCode = "404", description = "Natureza não localizada.")
     })

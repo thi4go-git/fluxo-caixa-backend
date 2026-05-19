@@ -1,15 +1,12 @@
 package com.dynss.cloudtecnologia.model.repository;
 
 import com.dynss.cloudtecnologia.exception.EntidadeNaoEncontradaException;
-
 import com.dynss.cloudtecnologia.model.entity.Natureza;
 import com.dynss.cloudtecnologia.model.entity.Usuario;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.panache.common.Parameters;
-
-import javax.enterprise.context.ApplicationScoped;
-
+import jakarta.enterprise.context.ApplicationScoped;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +36,7 @@ public class NaturezaRepository implements PanacheRepository<Natureza> {
     public Natureza findByUsuarioAndIDOrThrow(final Usuario usuario, final Long idNatureza) {
         Map<String, Object> params = new HashMap<>();
         params.put(COLUMN_USUARIO, usuario);
-        params.put(COLUMN_ID, idNatureza);
+        params.put("idNatureza", idNatureza);
         return find("usuario =:usuario AND id =:idNatureza ", params)
                 .firstResultOptional()
                 .orElseThrow(

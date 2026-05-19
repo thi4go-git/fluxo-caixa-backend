@@ -12,13 +12,12 @@ import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.ws.rs.core.MediaType;
-
+import jakarta.ws.rs.core.MediaType;
 import java.util.List;
-
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
+
+
 
 @QuarkusTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -27,6 +26,7 @@ class UsuarioControllerTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(UsuarioControllerTest.class);
     private static final String USERNAME_EXISTENTE = "username";
+    private static Integer usuarioCriadoId;
 
 
     @Test
@@ -51,6 +51,7 @@ class UsuarioControllerTest {
 
         assertNotNull(responseBody);
         assertEquals(HttpStatus.SC_CREATED, resposta.statusCode());
+        usuarioCriadoId = resposta.jsonPath().getInt("id");
     }
 
     @Test
@@ -76,7 +77,7 @@ class UsuarioControllerTest {
         });
 
         LOG.info(usuarioResponseList.toString());
-        assertTrue(!usuarioResponseList.isEmpty());
+        assertFalse(usuarioResponseList.isEmpty());
     }
 
     @Test
@@ -87,7 +88,7 @@ class UsuarioControllerTest {
         var resposta = given()
                 .contentType(MediaType.APPLICATION_JSON)
                 .when()
-                .pathParam("id", "1").get("/{id}")
+                .pathParam("id", usuarioCriadoId).get("/{id}")
                 .then()
                 .extract()
                 .response();

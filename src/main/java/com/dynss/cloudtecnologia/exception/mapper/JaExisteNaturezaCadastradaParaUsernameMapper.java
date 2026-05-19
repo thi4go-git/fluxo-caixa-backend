@@ -3,12 +3,12 @@ package com.dynss.cloudtecnologia.exception.mapper;
 import com.dynss.cloudtecnologia.exception.JaExisteNaturezaCadastradaParaUsername;
 import com.dynss.cloudtecnologia.rest.dto.ErrosResponseDTO;
 import org.jboss.logging.Logger;
-
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.Provider;
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Provider
 public class JaExisteNaturezaCadastradaParaUsernameMapper implements ExceptionMapper<JaExisteNaturezaCadastradaParaUsername> {

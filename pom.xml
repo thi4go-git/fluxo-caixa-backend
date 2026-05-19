@@ -8,16 +8,17 @@
     <version>1.0.0</version>
 
     <properties>
-        <compiler-plugin.version>3.11.0</compiler-plugin.version>
-        <maven.compiler.release>11</maven.compiler.release>
+        <compiler-plugin.version>3.15.0</compiler-plugin.version>
+        <maven.compiler.release>25</maven.compiler.release>
+        <lombok.version>1.18.40</lombok.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-        <quarkus.platform.version>2.16.3.Final</quarkus.platform.version>
+        <quarkus.platform.version>3.35.3</quarkus.platform.version>
         <skipITs>true</skipITs>
-        <surefire-plugin.version>3.0.0-M7</surefire-plugin.version>
-        <jacoco.version>0.8.7</jacoco.version>
+        <surefire-plugin.version>3.5.5</surefire-plugin.version>
         <sonar.coverage.exclusions>
             **/model/**, **/dto/**, **/entity/**,
             **/enum/**, **/enums/**,
@@ -48,7 +49,7 @@
 
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-resteasy-jackson</artifactId>
+            <artifactId>quarkus-rest-jackson</artifactId>
         </dependency>
 
         <dependency>
@@ -73,20 +74,15 @@
 
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-resteasy-jsonb</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-junit5</artifactId>
+            <artifactId>quarkus-junit</artifactId>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>RELEASE</version>
-            <scope>compile</scope>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -97,7 +93,7 @@
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
-            <version>1.4.2.Final</version>
+            <version>${mapstruct.version}</version>
         </dependency>
 
         <dependency>
@@ -112,15 +108,7 @@
 
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-resteasy</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jacoco</groupId>
-            <artifactId>org.jacoco.agent</artifactId>
-            <version>${jacoco.version}</version>
-            <classifier>runtime</classifier>
-            <scope>test</scope>
+            <artifactId>quarkus-rest</artifactId>
         </dependency>
 
         <dependency>
@@ -130,16 +118,14 @@
         </dependency>
 
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>3.12.4</version>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-junit-mockito</artifactId>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-junit5-mockito</artifactId>
-            <version>2.15.2.Final</version>
+            <artifactId>quarkus-jacoco</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -152,11 +138,6 @@
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
             <version>2.4.4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-resteasy-multipart</artifactId>
         </dependency>
 
         <dependency>
@@ -212,6 +193,18 @@
                     <compilerArgs>
                         <arg>-parameters</arg>
                     </compilerArgs>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <plugin>
@@ -221,6 +214,11 @@
                     <systemPropertyVariables>
                         <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
                         <maven.home>${maven.home}</maven.home>
+                        <quarkus.jacoco.data-file>${project.build.directory}/jacoco-quarkus.exec</quarkus.jacoco.data-file>
+                        <quarkus.jacoco.report-location>${project.build.directory}/site/jacoco</quarkus.jacoco.report-location>
+                        <quarkus.jacoco.excludes>
+                            **/.mvn/**,**/src/test/**,**/entity/**,**/dto/**,**/enums/**,MavenWrapperDownloader.java
+                        </quarkus.jacoco.excludes>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
@@ -241,33 +239,6 @@
                                 <maven.home>${maven.home}</maven.home>
                             </systemPropertyVariables>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- Configuração do plugin do Jacoco -->
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            **/.mvn/**,**/src/test/**,**/entity/**,**/dto/**,**/enums/**,MavenWrapperDownloader.java
-                        </exclude>
-                    </excludes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>report</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>

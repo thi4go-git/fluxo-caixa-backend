@@ -9,7 +9,7 @@ import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
 

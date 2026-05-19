@@ -4,8 +4,8 @@ import com.dynss.cloudtecnologia.rest.dto.pluggy.PluggyAuthRequestDTO;
 import com.dynss.cloudtecnologia.rest.dto.pluggy.PluggyAuthResponseDTO;
 import com.dynss.cloudtecnologia.rest.dto.pluggy.PluggyTransactionsDTO;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 
 
 

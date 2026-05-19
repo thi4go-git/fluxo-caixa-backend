@@ -4,16 +4,20 @@ package com.dynss.cloudtecnologia.model.repository;
 import com.dynss.cloudtecnologia.exception.EntidadeNaoEncontradaException;
 import com.dynss.cloudtecnologia.model.entity.Lancamento;
 import com.dynss.cloudtecnologia.model.entity.Usuario;
+import com.dynss.cloudtecnologia.model.enums.TipoLancamento;
 import com.dynss.cloudtecnologia.rest.dto.LancamentoFilterDTO;
 import com.dynss.cloudtecnologia.rest.dto.LancamentoReflectionDTO;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.panache.common.Parameters;
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @ApplicationScoped
@@ -47,32 +51,57 @@ public class LancamentoRepository implements PanacheRepository<Lancamento> {
     }
 
     public List<LancamentoReflectionDTO> getLancamentosDashboard(Usuario usuario) {
-        String ano = "" + LocalDate.now().getYear();
-        String query = "SELECT " +
-                "to_char(data_lancamento,'MM/YYYY') AS mes," +
-                "to_char(data_lancamento,'MM') AS mesnumero," +
-                "SUM(CASE WHEN tipo = 0 THEN valor_parcela ELSE 0 END) AS entradas, " +
-                "SUM(CASE WHEN tipo = 1 THEN valor_parcela ELSE 0 END) AS saidas " +
-                "from Lancamento " +
-                "WHERE to_char(data_lancamento,'YYYY') = '" + ano + "'" +
-                " AND usuario =:usuario  " +
-                "GROUP BY mes,mesnumero order by mesnumero";
+        int ano = LocalDate.now().getYear();
+        LocalDate inicioAno = LocalDate.of(ano, 1, 1);
+        LocalDate fimAno = LocalDate.of(ano, 12, 31);
 
-        return find
-                (query, Parameters.with(COLUMN_USUARIO, usuario))
-                .project(LancamentoReflectionDTO.class).list();
+        List<Lancamento> lancamentos = find(
+                "usuario = :usuario AND dataLancamento between :inicioAno AND :fimAno order by dataLancamento asc",
+                Parameters.with(COLUMN_USUARIO, usuario)
+                        .and("inicioAno", inicioAno)
+                        .and("fimAno", fimAno)
+        ).list();
+
+        Map<Integer, List<Lancamento>> lancamentosPorMes = lancamentos.stream()
+                .collect(Collectors.groupingBy(
+                        lancamento -> lancamento.getDataLancamento().getMonthValue(),
+                        LinkedHashMap::new,
+                        Collectors.toList()
+                ));
+
+        return lancamentosPorMes.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .map(entry -> toLancamentoReflectionDTO(ano, entry.getKey(), entry.getValue()))
+                .toList();
+    }
+
+    private LancamentoReflectionDTO toLancamentoReflectionDTO(int ano, int mes, List<Lancamento> lancamentos) {
+        long entradas = lancamentos.stream()
+                .filter(lancamento -> lancamento.getTipo() == TipoLancamento.CREDITO)
+                .map(Lancamento::getValorParcela)
+                .map(BigDecimal::longValue)
+                .reduce(0L, Long::sum);
+
+        long saidas = lancamentos.stream()
+                .filter(lancamento -> lancamento.getTipo() == TipoLancamento.DEBITO)
+                .map(Lancamento::getValorParcela)
+                .map(BigDecimal::longValue)
+                .reduce(0L, Long::sum);
+
+        String mesNumero = String.format("%02d", mes);
+        return new LancamentoReflectionDTO(mesNumero + "/" + ano, mesNumero, entradas, saidas);
     }
 
     public List<Lancamento> listarLancamentosByUsuarioDate
             (Usuario usuario, LocalDate dataInicio, LocalDate dataFim) {
-        return find(" id_usuario = ?1 AND data_lancamento between ?2 and ?3 " +
-                " order by data_lancamento,id asc ", usuario.getId(), dataInicio, dataFim).list();
+        return find(" usuario = ?1 AND dataLancamento between ?2 and ?3 " +
+                " order by dataLancamento,id asc ", usuario, dataInicio, dataFim).list();
     }
 
     public List<Lancamento> listarLancamentosUsuarioByNatureza
             (Usuario usuario, Long idNatureza) {
-        return find(" id_usuario = ?1 AND id_natureza = ?2 " +
-                " order by data_lancamento,id asc ", usuario.getId(), idNatureza).list();
+        return find(" usuario = ?1 AND natureza.id = ?2 " +
+                " order by dataLancamento,id asc ", usuario, idNatureza).list();
     }
 
     public List<Lancamento> listarLancamentosByUsuarioDateFilter
@@ -81,9 +110,10 @@ public class LancamentoRepository implements PanacheRepository<Lancamento> {
         lancamento.setDescricao(lancamento.getDescricao().toUpperCase());
 
         Map<String, Object> params = new HashMap<>();
-        String query = " usuario =:usuario AND  data_lancamento between '" + lancamento.getDataInicio()
-                + "' AND '" + lancamento.getDataFim() + "'  ";
+        String query = " usuario = :usuario AND dataLancamento between :dataInicio AND :dataFim ";
         params.put(COLUMN_USUARIO, usuario);
+        params.put("dataInicio", LocalDate.parse(lancamento.getDataInicio()));
+        params.put("dataFim", LocalDate.parse(lancamento.getDataFim()));
 
         if (lancamento.getId() != null) {
             query += " AND id = :id ";
@@ -93,25 +123,25 @@ public class LancamentoRepository implements PanacheRepository<Lancamento> {
             query += " AND tipo = :tipo ";
             params.put("tipo", lancamento.getTipo());
         }
-        if (lancamento.getDescricao() != null) {
+        if (lancamento.getDescricao() != null && !lancamento.getDescricao().isBlank()) {
             query += " AND UPPER(descricao) like UPPER(concat('%', :descricao, '%'))";
             params.put("descricao", lancamento.getDescricao());
         }
         if (lancamento.getValorParcela() != null) {
-            query += " AND valor_parcela = :valor_parcela ";
-            params.put("valor_parcela", lancamento.getValorParcela());
+            query += " AND valorParcela = :valorParcela ";
+            params.put("valorParcela", lancamento.getValorParcela());
         }
         if (lancamento.getQtdeParcelas() != null) {
-            query += " AND qtde_parcelas = :qtde_parcelas ";
-            params.put("qtde_parcelas", lancamento.getQtdeParcelas());
+            query += " AND qtdeParcelas = :qtdeParcelas ";
+            params.put("qtdeParcelas", lancamento.getQtdeParcelas());
         }
         if (lancamento.getNrParcela() != null) {
-            query += " AND nr_parcela = :nr_parcela  ";
-            params.put("nr_parcela", lancamento.getNrParcela());
+            query += " AND nrParcela = :nrParcela  ";
+            params.put("nrParcela", lancamento.getNrParcela());
         }
         if (lancamento.getIdNatureza() != null) {
-            query += " AND id_natureza = :id_natureza ";
-            params.put("id_natureza", lancamento.getIdNatureza());
+            query += " AND natureza.id = :idNatureza ";
+            params.put("idNatureza", lancamento.getIdNatureza());
         }
         if (lancamento.getSituacao() != null) {
             query += " AND situacao = :situacao ";
@@ -122,7 +152,7 @@ public class LancamentoRepository implements PanacheRepository<Lancamento> {
             params.put("origem", lancamento.getOrigem());
         }
 
-        query += " ORDER BY data_lancamento asc ";
+        query += " ORDER BY dataLancamento asc ";
 
 
         return find(query, params).list();

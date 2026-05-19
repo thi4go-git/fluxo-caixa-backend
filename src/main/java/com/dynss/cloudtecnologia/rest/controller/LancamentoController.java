@@ -15,14 +15,13 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.security.*;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.inject.Inject;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.inject.Inject;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -274,7 +273,7 @@ public class LancamentoController {
             @APIResponse(responseCode = "404", description = LANCAMENTO_NOTFOUND),
     })
     public Response uploadFile(
-            @MultipartForm AnexoUploaDTO anexoUploaDTO,
+            @BeanParam AnexoUploaDTO anexoUploaDTO,
             @PathParam("id") @NotNull(message = "O campo id é obrigatório!") final Long idLancamento
     ) {
         lancamentoService.uploadAnexo(anexoUploaDTO, idLancamento);

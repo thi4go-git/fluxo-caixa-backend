@@ -4,10 +4,10 @@ package com.dynss.cloudtecnologia.rest.controller;
 import com.dynss.cloudtecnologia.rest.dto.metabase.MetabaseEmbedResponseDTO;
 import com.dynss.cloudtecnologia.service.MetabaseService;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-import javax.inject.Inject;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 
 @Path("/metabase")

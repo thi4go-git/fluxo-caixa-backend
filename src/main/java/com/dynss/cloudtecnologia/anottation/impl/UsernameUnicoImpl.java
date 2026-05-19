@@ -2,10 +2,9 @@ package com.dynss.cloudtecnologia.anottation.impl;
 
 import com.dynss.cloudtecnologia.anottation.UsernameUnico;
 import com.dynss.cloudtecnologia.service.impl.UsuarioServiceImpl;
-
-import javax.inject.Inject;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.inject.Inject;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class UsernameUnicoImpl implements ConstraintValidator<UsernameUnico, String> {
 
