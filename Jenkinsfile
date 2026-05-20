@@ -22,15 +22,10 @@
                 }
             }
         }
-        stage('Compilando') {
+        stage('Build e Testes') {
             steps {
                 sh 'chmod +x ./mvnw'
-                sh './mvnw clean package -DskipTests=true'
-            }
-        }
-        stage('Testes unitarios'){
-            steps {
-                sh './mvnw verify'
+                sh './mvnw clean verify'
             }
         }
        stage('Sonar Analise') {
@@ -43,8 +38,6 @@
                        ${scannerHome}/bin/sonar-scanner -e \
                        -Dsonar.projectKey=fluxo-caixa-backend \
                        -Dsonar.projectName='fluxo-caixa-backend' \
-                       -Dsonar.host.url=http://cloudtecnologia.dynns.com:9000 \
-                       -Dsonar.token=sqp_30031bf2305bd7e16759e94c738cbaf457e8fe1e \
                        -Dsonar.java.binaries=target/classes
                    """
                }
