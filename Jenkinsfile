@@ -10,7 +10,7 @@
     stages {
         stage('Criando .ENV') {
             steps {
-                withCredentials([file(credentialsId: 'fluxo-caixa-front-env', variable: 'ENV_FILE')]) {
+                withCredentials([file(credentialsId: 'fluxo-caixa-back-env', variable: 'ENV_FILE')]) {
                     sh '''
                         cp "$ENV_FILE" .env
                         chmod 600 .env
