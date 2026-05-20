@@ -4,13 +4,13 @@
 
     tools {
         jdk 'JDK_25'
-        maven 'MAVEN_3.8.8'
+        maven 'MAVEN_3.9.16'
     }
 
     stages {
         stage('Criando .ENV') {
             steps {
-                withCredentials([file(credentialsId: 'fluxo-caixa-env', variable: 'ENV_FILE')]) {
+                withCredentials([file(credentialsId: 'fluxo-caixa-front-env', variable: 'ENV_FILE')]) {
                     sh '''
                         cp "$ENV_FILE" .env
                         chmod 600 .env
