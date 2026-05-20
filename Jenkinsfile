@@ -51,6 +51,12 @@
                }
            }
        }
+       stage('Test Docker') {
+           steps {
+               sh 'docker --version'
+               sh 'docker compose version'
+           }
+       }
        stage('Deploy'){
            steps {
                sh 'docker compose down'
