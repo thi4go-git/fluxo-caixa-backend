@@ -42,8 +42,10 @@
                    sh """
                        ${scannerHome}/bin/sonar-scanner -e \
                        -Dsonar.projectKey=fluxo-caixa-backend \
+                       -Dsonar.projectName='fluxo-caixa-backend' \
                        -Dsonar.host.url=http://cloudtecnologia.dynns.com:9000 \
-                       -Dsonar.login=5034b1ee53e242e70b049739c2547d0ded913b1f \
+                       -Dsonar.token=sqp_30031bf2305bd7e16759e94c738cbaf457e8fe1e
+                       -Dsonar.login=sqp_30031bf2305bd7e16759e94c738cbaf457e8fe1e \
                        -Dsonar.java.binaries=target
                    """
                }
