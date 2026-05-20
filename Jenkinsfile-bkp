@@ -22,6 +22,35 @@
                 }
             }
         }
+        stage('Build e Testes') {
+            steps {
+                sh 'chmod +x ./mvnw'
+                sh './mvnw clean verify'
+            }
+        }
+       stage('Sonar Analise') {
+           environment{
+               scannerHome = tool 'SONAR_SCANNER_JDK25'
+           }
+           steps {
+               withSonarQubeEnv('SONAR'){
+                   sh """
+                       ${scannerHome}/bin/sonar-scanner -e \
+                       -Dsonar.projectKey=fluxo-caixa-backend \
+                       -Dsonar.projectName='fluxo-caixa-backend' \
+                       -Dsonar.java.binaries=target
+                   """
+               }
+           }
+       }
+       stage('Sonar QualityGate') {
+           steps {
+               sleep(20)
+               timeout(time: 1, unit: 'MINUTES'){
+                   waitForQualityGate abortPipeline: true
+               }
+           }
+       }
        stage('Test Docker') {
            steps {
                sh 'docker --version'
