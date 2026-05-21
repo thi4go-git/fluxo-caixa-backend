@@ -40,7 +40,10 @@ pipeline {
                         ${scannerHome}/bin/sonar-scanner -e \
                         -Dsonar.projectKey=fluxo-caixa-backend \
                         -Dsonar.projectName='fluxo-caixa-backend' \
-                        -Dsonar.java.binaries=target
+                        -Dsonar.sources=src/main/java \
+                        -Dsonar.tests=src/test/java \
+                        -Dsonar.java.binaries=target/classes \
+                        -Dsonar.java.test.binaries=target/test-classes
                     """
                 }
             }
