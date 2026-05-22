@@ -1,5 +1,8 @@
-*
-!target/*-runner
-!target/*-runner.jar
-!target/lib/*
-!target/quarkus-app/*
+.git
+.idea
+.codex
+.agents
+target
+README.md
+Jenkinsfile
+*.iml

@@ -75,7 +75,8 @@
 #   accessed directly. (example: "foo.example.com,bar.example.com")
 #
 ###
-FROM registry.access.redhat.com/ubi8/openjdk-17:1.14
+ARG JAVA_RUNTIME_IMAGE=registry.access.redhat.com/ubi9/openjdk-25:1.24
+FROM ${JAVA_RUNTIME_IMAGE}
 
 ENV LANGUAGE='en_US:en'
 

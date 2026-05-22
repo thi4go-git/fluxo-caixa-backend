@@ -1,11 +1,8 @@
+# syntax=docker/dockerfile:1.7
 ####
 # This Dockerfile is used in order to build a container that runs the Quarkus application in JVM mode
 #
-# Before building the container image run:
-#
-# ./mvnw package
-#
-# Then, build the image with:
+# Build the image with:
 #
 # docker build -f src/main/docker/Dockerfile.jvm -t quarkus/fluxo-caixa-quarkus-jvm .
 #
@@ -75,19 +72,29 @@
 #   accessed directly. (example: "foo.example.com,bar.example.com")
 #
 ###
-FROM registry.access.redhat.com/ubi8/openjdk-17:1.14
+ARG JAVA_BUILD_IMAGE=eclipse-temurin:25-jdk
+ARG JAVA_RUNTIME_IMAGE=registry.access.redhat.com/ubi9/openjdk-25:1.24
+FROM ${JAVA_BUILD_IMAGE} AS build
+
+WORKDIR /workspace
+COPY .mvn/ .mvn/
+COPY mvnw pom.xml ./
+RUN chmod +x mvnw
+COPY src/ src/
+RUN --mount=type=cache,target=/root/.m2 ./mvnw -B package -DskipTests
+
+FROM ${JAVA_RUNTIME_IMAGE}
 
 ENV LANGUAGE='en_US:en'
 
 
 # We make four distinct layers so if there are application changes the library layers can be re-used
-COPY --chown=185 target/quarkus-app/lib/ /deployments/lib/
-COPY --chown=185 target/quarkus-app/*.jar /deployments/
-COPY --chown=185 target/quarkus-app/app/ /deployments/app/
-COPY --chown=185 target/quarkus-app/quarkus/ /deployments/quarkus/
+COPY --from=build --chown=185 /workspace/target/quarkus-app/lib/ /deployments/lib/
+COPY --from=build --chown=185 /workspace/target/quarkus-app/*.jar /deployments/
+COPY --from=build --chown=185 /workspace/target/quarkus-app/app/ /deployments/app/
+COPY --from=build --chown=185 /workspace/target/quarkus-app/quarkus/ /deployments/quarkus/
 
 EXPOSE 8080
 USER 185
 ENV JAVA_OPTS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
 ENV JAVA_APP_JAR="/deployments/quarkus-run.jar"
-

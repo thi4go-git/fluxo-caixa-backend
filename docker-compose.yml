@@ -7,6 +7,7 @@ services:
             context: .
             dockerfile: src/main/docker/Dockerfile.jvm
             args:
+                - JAVA_RUNTIME_IMAGE=registry.access.redhat.com/ubi9/openjdk-25:1.24
                 - JAR_FILE=target/fluxo-caixa-backend-1.0.0.jar
                 - CONTEXT=fluxo-caixa-backend
         ports:
