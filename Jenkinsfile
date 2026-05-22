@@ -32,7 +32,7 @@ pipeline {
         }
         stage('Sonar Analise') {
             environment {
-                scannerHome = tool 'SONAR_SCANNER_JDK25'
+                scannerHome = tool 'SONAR_SCANNER'
             }
             steps {
                 withSonarQubeEnv('SONAR') {
