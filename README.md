@@ -2,6 +2,7 @@
 
 Backend da aplicação de fluxo de caixa, construído com Quarkus, JPA/Hibernate e PostgreSQL.
 
+
 ## Resumo do projeto
 
 Este serviço expõe APIs para:
