@@ -75,7 +75,7 @@ public class NaturezaController {
     }
 
     @GET
-    @Operation(summary = "Listar  Naturezas")
+    @Operation(summary = "Retornar lista de naturezas ")
     @APIResponses(value = {
             @APIResponse(responseCode = "200",
                     description = "Lista de Naturezas",
