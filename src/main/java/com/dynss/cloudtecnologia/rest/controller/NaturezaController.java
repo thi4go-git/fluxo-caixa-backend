@@ -55,7 +55,7 @@ public class NaturezaController {
 
     @POST
     @RequestBody(required = true)
-    @Operation(summary = "Cria uma Natureza")
+    @Operation(summary = "Endpoint para criação de Natureza")
     @APIResponses(value = {
             @APIResponse(responseCode = "201", description = "Natureza criada com sucesso",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON,
