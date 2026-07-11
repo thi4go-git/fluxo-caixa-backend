@@ -75,7 +75,7 @@ public class NaturezaController {
     }
 
     @GET
-    @Operation(summary = "Listar  Naturezas")
+    @Operation(summary = "Retornar lista de naturezas ")
     @APIResponses(value = {
             @APIResponse(responseCode = "200",
                     description = "Lista de Naturezas",
@@ -91,7 +91,7 @@ public class NaturezaController {
     }
 
     @DELETE
-    @Operation(summary = "Deleta Natureza Cliente pelo ID")
+    @Operation(summary ="Deletar natureza passando username e descricaoNatureza ")
     @APIResponses(value = {
             @APIResponse(responseCode = "204", description = "Natureza Deletada", content = @Content(mediaType = MediaType.APPLICATION_JSON)),
             @APIResponse(responseCode = "500", description = SERVER_ERROR),
